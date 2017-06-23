@@ -9,7 +9,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         GameInit game = new GameInit();
 
-        primaryStage.setTitle("Fruit Collector");
+        primaryStage.setTitle("Fruit Collector 00");
         primaryStage.setScene(game.getScene());
         primaryStage.show();
     }
