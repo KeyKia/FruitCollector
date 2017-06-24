@@ -21,7 +21,7 @@ import javafx.util.Duration;
  * 9512762630
  */
 class GameInit {
-    private final Image back = new Image("file:Resources/JungleBack.png");
+    private final Image back = new Image("file:Resources/images/JungleBack.png");
     private Group root = new Group();
     private Scene scene = new Scene(root);
     private boolean soundEffectSts = true, musicSts = true;
