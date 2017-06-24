@@ -11,10 +11,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
+import javax.sound.sampled.*;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by Ali Jamadi on 6/23/17.
@@ -32,13 +38,29 @@ class GameInit {
     private CheckBox music = new CheckBox("Music");
     private CheckBox soundEffect = new CheckBox("Sound Effect");
     private Text title = new Text(background.getWidth() / 2 - 30, background.getHeight() / 2 - 100, "Fruit Collector");
-
+    //sound vars
+    //String backgroundEffectAddr = "Resources/sounds/" + "BirdInRain" + ".mp3";
+    //AudioInputStream backgroundEffectStream = null;
+    //Clip backgroundEffectClip = null;
+    MediaPlayer backgroundEffectPlayer  = null;
 
     GameInit(Stage stage) {
         this.stage = stage;
 
         background.getGraphicsContext2D().drawImage(back,0,0,500,700);
         //TODO: PlayGame sound & load soundEffects
+            //loading sound effect file/files
+            String musicFile = "Resources/sounds/" + "RainAndThunderStrike" + ".mp3";
+
+            Media sound = new Media(new File(musicFile).toURI().toString());
+            MediaPlayer backgroundEffectPlayer = new MediaPlayer(sound);
+            backgroundEffectPlayer.setOnEndOfMedia(new Runnable() {
+                public void run() {
+                    backgroundEffectPlayer.seek(Duration.ZERO);
+                }
+            });
+            backgroundEffectPlayer.play();
+
 
         title.setTextAlignment(TextAlignment.CENTER);
         title.setScaleX(4);
@@ -69,6 +91,7 @@ class GameInit {
         music.setOnMouseClicked(event -> {
             if (isSoundEffectON()) {
                 //ToDO:play sound effect
+                //this.backgroundEffectPlayer.play();
             }
             setMusicSts(music.isSelected());
         });
@@ -79,6 +102,7 @@ class GameInit {
         soundEffect.setOnMouseClicked(event -> {
             if (isSoundEffectON()) {
                 //ToDO:play sound effect
+                //this.backgroundEffectPlayer.play();
             }
             setSoundEffectSts(soundEffect.isSelected());
         });
@@ -99,6 +123,7 @@ class GameInit {
     private void setMusicSts(boolean musicSts) {
         this.musicSts = musicSts;
         //ToDo:Stop and play Music
+        //this.backgroundEffectPlayer.stop();
     }
 
     private boolean isSoundEffectON() {
