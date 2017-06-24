@@ -39,21 +39,18 @@ class GameInit {
     private CheckBox soundEffect = new CheckBox("Sound Effect");
     private Text title = new Text(background.getWidth() / 2 - 30, background.getHeight() / 2 - 100, "Fruit Collector");
     //sound vars
-    //String backgroundEffectAddr = "Resources/sounds/" + "BirdInRain" + ".mp3";
-    //AudioInputStream backgroundEffectStream = null;
-    //Clip backgroundEffectClip = null;
-    MediaPlayer backgroundEffectPlayer  = null;
+    private MediaPlayer backgroundEffectPlayer  = null;
 
     GameInit(Stage stage) {
         this.stage = stage;
 
         background.getGraphicsContext2D().drawImage(back,0,0,500,700);
-        //TODO: PlayGame sound & load soundEffects
+        //TODOPlayGame sound & load soundEffects
             //loading sound effect file/files
             String musicFile = "Resources/sounds/" + "RainAndThunderStrike" + ".mp3";
 
             Media sound = new Media(new File(musicFile).toURI().toString());
-            MediaPlayer backgroundEffectPlayer = new MediaPlayer(sound);
+            backgroundEffectPlayer = new MediaPlayer(sound);
             backgroundEffectPlayer.setOnEndOfMedia(new Runnable() {
                 public void run() {
                     backgroundEffectPlayer.seek(Duration.ZERO);
@@ -72,8 +69,10 @@ class GameInit {
         EventHandler<MouseEvent> startGame = event -> {
             if (event.getSource() == singlePlayerBtn) {
                 startGameAnimation(true);
+                this.backgroundEffectPlayer.stop();
             } else if (event.getSource() == multiPlayerBtn) {
                 startGameAnimation(false);
+                this.backgroundEffectPlayer.stop();
             }
         };
 
@@ -90,8 +89,10 @@ class GameInit {
         music.setLayoutX(multiPlayerBtn.getLayoutX() + 10);
         music.setOnMouseClicked(event -> {
             if (isSoundEffectON()) {
-                //ToDO:play sound effect
-                //this.backgroundEffectPlayer.play();
+                //ToDOplay sound effect
+                this.backgroundEffectPlayer.play();
+            }else{
+                this.backgroundEffectPlayer.stop();
             }
             setMusicSts(music.isSelected());
         });
@@ -101,8 +102,10 @@ class GameInit {
         soundEffect.setLayoutX(singlePlayerBtn.getLayoutX() + 10);
         soundEffect.setOnMouseClicked(event -> {
             if (isSoundEffectON()) {
-                //ToDO:play sound effect
-                //this.backgroundEffectPlayer.play();
+                //ToDOplay sound effect
+                this.backgroundEffectPlayer.play();
+            }else{
+                this.backgroundEffectPlayer.stop();
             }
             setSoundEffectSts(soundEffect.isSelected());
         });
@@ -116,14 +119,20 @@ class GameInit {
 
     }
 
+    //TODO: make sound effect and music vars dependent to the checkbox
     private void setSoundEffectSts(boolean soundeffect) {
         this.soundEffectSts = soundeffect;
     }
 
     private void setMusicSts(boolean musicSts) {
         this.musicSts = musicSts;
-        //ToDo:Stop and play Music
-        //this.backgroundEffectPlayer.stop();
+        //ToDoStop and play Music
+        if(musicSts){
+            this.backgroundEffectPlayer.play();
+        }else{
+            this.backgroundEffectPlayer.stop();
+        }
+
     }
 
     private boolean isSoundEffectON() {

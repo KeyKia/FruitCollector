@@ -5,8 +5,12 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+
+import java.io.File;
 
 /**
  * Created by Ali Jamadi on 6/23/17.
@@ -26,6 +30,8 @@ class GameScene {
         timerLbl.setText(convertTimeToString());
 
     }));
+    //sound vars
+    private MediaPlayer backgroundEffectPlayer  = null;
 
     GameScene(double width, double height, Group root, double start, int time) {
         this.width = width;
@@ -43,7 +49,21 @@ class GameScene {
         timer.setCycleCount(Timeline.INDEFINITE);
         timer.play();
 
-        //TODO:if(music) play it
+        //TODO:insert music enable/disable to condition
+        if(true){
+            //loading sound effect file/files
+            String musicFile = "Resources/sounds/" + "BirdInRain" + ".mp3";
+
+            Media sound = new Media(new File(musicFile).toURI().toString());
+            backgroundEffectPlayer = new MediaPlayer(sound);
+            backgroundEffectPlayer.setOnEndOfMedia(new Runnable() {
+                public void run() {
+                    backgroundEffectPlayer.seek(Duration.ZERO);
+                }
+            });
+            backgroundEffectPlayer.play();
+
+        }
 
         addBasket();
 
