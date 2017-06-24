@@ -9,12 +9,12 @@ import javafx.scene.image.Image;
  * 9512762630
  */
 public class Basket {
-    private final Image basketImg = new Image("file:Resources/images/basket.png");
     private Canvas basketCanvas;
 
     public Basket(double width, double height) {
         basketCanvas = new Canvas(width, height);
         GraphicsContext gc = basketCanvas.getGraphicsContext2D();
+        Image basketImg = new Image("file:Resources/images/basket.png");
         gc.drawImage(basketImg, 0, 0, width, height);
     }
 
