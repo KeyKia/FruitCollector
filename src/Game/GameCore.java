@@ -48,6 +48,7 @@ class GameCore {
     private PlayerInfo player1, player2;
 
     private Timeline gameTimer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+        //TODO: revission fruit fallings -> plan every 30 s + add worm
         time++;
         // Plan each 30 seconds
         if (time % 3 == 0) {
@@ -72,8 +73,8 @@ class GameCore {
 
         //TODO:dialog to get names of player and create player 1 and 2(using method)
         //FOR DEBUGGING ONLY
-        player1 = new PlayerInfo("Jay");
-        player2 = new PlayerInfo("Kia");
+        player1 = new PlayerInfo("Jeem");
+        player2 = new PlayerInfo("Jim");
         ////////////////////////////////////////////
 
 
@@ -97,10 +98,10 @@ class GameCore {
         } else {
             scenes.add(new GameScene(scene.getWidth() / 2 - 5, scene.getHeight(), root, scene.getWidth() / 2 + 5, TIME, player1));
             scenes.add(new GameScene(scene.getWidth() / 2 - 5, scene.getHeight(), root, 0.0, TIME, player2));
-            Canvas line = new Canvas(10, scene.getHeight());
+            Canvas line = new Canvas(5, scene.getHeight());
             line.getGraphicsContext2D().setFill(Color.LIGHTGRAY);
-            line.getGraphicsContext2D().fillRect(0, 0, 10, line.getHeight());
-            line.setLayoutX(scene.getWidth() / 2 - 5);
+            line.getGraphicsContext2D().fillRect(0, 0, 5, line.getHeight());
+            line.setLayoutX(scene.getWidth() / 2);
             root.getChildren().add(line);
         }
 

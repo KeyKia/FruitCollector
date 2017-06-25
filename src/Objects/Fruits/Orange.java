@@ -12,7 +12,6 @@ import javafx.scene.image.Image;
 public class Orange extends Fruits {
     static private final Image img = new Image("file:Resources/images/Orange.png");
     private boolean left;
-
     public Orange() {
         super(((int) (GameScene.UNIT * 10)), ((int) (40 * GameScene.UNIT / GameScene.SPEED_CONVERTER)), 40, img);
         if (position > 10 && position < 90)
