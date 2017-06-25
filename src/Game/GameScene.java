@@ -39,14 +39,6 @@ public class GameScene {
     private ArrayList<Canvas> heartsCanvas = new ArrayList<>();
 
     private Map<Fruits, Canvas> fruitsCanvasMap = new HashMap<>();
-
-
-    private Timeline timer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-        time--;
-        timerLbl.setText(convertTimeToString());
-
-    }));
-
     private Timeline objectsHandler = new Timeline(new KeyFrame(Duration.millis(RENDER_SPEED), event -> {
         try {
             moveFruits();
@@ -54,6 +46,13 @@ public class GameScene {
         } catch (ConcurrentModificationException e) {
             //just to prevent default handling
         }
+
+    }));
+    private Timeline timer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+        time--;
+        timerLbl.setText(convertTimeToString());
+        if (time < 110)
+            gameOver();
 
     }));
 
@@ -154,10 +153,21 @@ public class GameScene {
     }
 
     private void gameOver() {
-        if (time < 0) {
-            timer.stop();
-            objectsHandler.stop();
+        timer.stop();
+        objectsHandler.stop();
+        GameCore.removeScene(this);
+
+        GameCore.scores.addScore(player);
+
+        for (Fruits fruit : fruitsCanvasMap.keySet()) {
+            root.getChildren().remove(fruitsCanvasMap.get(fruit));
         }
+        fruitsCanvasMap.clear();
+        for (Canvas heart : heartsCanvas) {
+            root.getChildren().remove(heart);
+        }
+        showScores();
+
     }
 
     private void moveFruits() {
@@ -199,7 +209,7 @@ public class GameScene {
 
         for (int i = hearts; i > 0; i--) {
             Canvas canvas = new Canvas(20 * UNIT, 20 * UNIT);
-            canvas.setLayoutX(start + width - (i * 25));
+            canvas.setLayoutX(start + width - (i * canvas.getWidth()));
             canvas.setLayoutY(50);
             canvas.getGraphicsContext2D().drawImage(image, 0, 0, 20 * UNIT, 20 * UNIT);
             root.getChildren().add(canvas);
@@ -234,4 +244,9 @@ public class GameScene {
         }
 
     }
+
+    void showScores() {
+        root.getChildren().addAll(GameCore.scores.getHighScoreScene(start, width));
+    }
+
 }
