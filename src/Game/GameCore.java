@@ -32,7 +32,7 @@ class GameCore {
     //sound vars
     private MediaPlayer backgroundEffectPlayer = null;
 
-    private Timeline movementHandler = new Timeline(new KeyFrame(Duration.millis(15), event -> {
+    private Timeline movementHandler = new Timeline(new KeyFrame(Duration.millis(GameScene.RENDER_SPEED), event -> {
         if (left)
             scenes.get(0).moveBasket(true);
         else if (right)
@@ -49,6 +49,7 @@ class GameCore {
 
     private Timeline gameTimer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
         time++;
+        // Plan each 30 seconds
         if (time % 3 == 0) {
             Orange t1 = new Orange();
             Orange t2 = new Orange();

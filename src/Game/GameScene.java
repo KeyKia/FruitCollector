@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public class GameScene {
     public static final int SPEED_CONVERTER = 60;
-    private static final int RENDER_SPEED = 1000 / 60;
+    static final int RENDER_SPEED = 1000 / 60;
     public static double UNIT;
     private double width, height;
     private Group root;
