@@ -48,6 +48,7 @@ class GameCore {
     private PlayerInfo player1, player2;
 
     private Timeline gameTimer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+        //TODO: revission fruit fallings -> plan every 30 s + add worm
         time++;
         if (time % 3 == 0) {
             Orange t1 = new Orange();
@@ -71,8 +72,8 @@ class GameCore {
 
         //TODO:dialog to get names of player and create player 1 and 2(using method)
         //FOR DEBUGGING ONLY
-        player1 = new PlayerInfo("Jay");
-        player2 = new PlayerInfo("Kia");
+        player1 = new PlayerInfo("Jeem");
+        player2 = new PlayerInfo("Jim");
         ////////////////////////////////////////////
 
 
