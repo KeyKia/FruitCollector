@@ -169,10 +169,14 @@ public class GameScene {
         for (Fruits fruit : fruitsCanvasMap.keySet()) {
             Canvas canvas = fruitsCanvasMap.get(fruit);
             if (canvas.getBoundsInParent().intersects(basketCanvas.getBoundsInParent())) {
-                root.getChildren().remove(canvas);
-                fruitCollected(fruit);
-                fruitsCanvasMap.remove(fruit);
-                //TODO:play soundEffect if possible related to fruit type
+                if (canvas.getLayoutX() > basketCanvas.getLayoutX() + 4 && canvas.getLayoutX() + canvas.getWidth() < basketCanvas.getLayoutX() + basketCanvas.getWidth() - 4) {
+                    if (canvas.getLayoutY() >= basketCanvas.getLayoutY() - 7) {
+                        root.getChildren().remove(canvas);
+                        fruitCollected(fruit);
+                        fruitsCanvasMap.remove(fruit);
+                        //TODO:play soundEffect if possible related to fruit type
+                    }
+                }
             }
         }
     }

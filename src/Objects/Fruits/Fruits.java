@@ -22,7 +22,7 @@ public abstract class Fruits {
         this.speed = speed;
         this.score = score;
         this.image = image;
-        position = random.nextInt(100);
+        position = random.nextInt(85) + 10;
 
     }
 
