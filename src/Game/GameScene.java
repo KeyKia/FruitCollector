@@ -7,10 +7,13 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.effect.BlendMode;
+import javafx.scene.image.Image;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
+import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +36,7 @@ public class GameScene {
 
     private Text score = new Text();
 
+    private ArrayList<Canvas> heartsCanvas = new ArrayList<>();
 
     private Map<Fruits, Canvas> fruitsCanvasMap = new HashMap<>();
 
@@ -90,6 +94,8 @@ public class GameScene {
 
 
         addBasket();
+
+        addHearts();
 
         objectsHandler.setCycleCount(Animation.INDEFINITE);
         objectsHandler.play();
@@ -184,5 +190,48 @@ public class GameScene {
     private void fruitCollected(Fruits fruit) {
         player.addScore(fruit.getScore());
         score.setText(String.format("%05d", player.getScore()));
+
+    }
+
+    private void addHearts() {
+        int hearts = player.getHearts();
+        Image image = new Image("file:Resources/images/heart.png");
+
+        for (int i = hearts; i > 0; i--) {
+            Canvas canvas = new Canvas(20 * UNIT, 20 * UNIT);
+            canvas.setLayoutX(start + width - (i * 25));
+            canvas.setLayoutY(50);
+            canvas.getGraphicsContext2D().drawImage(image, 0, 0, 20 * UNIT, 20 * UNIT);
+            root.getChildren().add(canvas);
+            heartsCanvas.add(canvas);
+        }
+    }
+
+    private void loseHeart() {
+        if (heartsCanvas.size() > 0) {
+
+            Canvas canvas = heartsCanvas.get(0);
+            canvas.getGraphicsContext2D().setGlobalBlendMode(BlendMode.SCREEN);
+
+            Image image = new Image("file:Resources/images/heart.png");
+
+            Timeline removeHeartAnimation = new Timeline(new KeyFrame(Duration.millis(RENDER_SPEED), event -> {
+                if (canvas.getScaleX() < 2) {
+                    canvas.setScaleX(canvas.getScaleX() + 0.1);
+                    canvas.setScaleY(canvas.getScaleY() + 0.1);
+                    canvas.getGraphicsContext2D().drawImage(image, 0, 0, canvas.getWidth(), canvas.getHeight());
+                }
+            }));
+
+            removeHeartAnimation.setCycleCount(10);
+            removeHeartAnimation.play();
+            removeHeartAnimation.setOnFinished(event -> {
+                root.getChildren().remove(canvas);
+                heartsCanvas.remove(canvas);
+            });
+        } else {
+            //TODO: Game Over
+        }
+
     }
 }

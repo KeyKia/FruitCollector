@@ -10,6 +10,7 @@ public class PlayerInfo {
     Image avatar;
     private String nickName;
     private int score = 0;
+    private int hearts = 3;
 
     public PlayerInfo(String nickName) {
         this.nickName = nickName;
@@ -30,5 +31,13 @@ public class PlayerInfo {
 
     public void addScore(int score) {
         this.score += score;
+    }
+
+    public int getHearts() {
+        return hearts;
+    }
+
+    public void loseHart() {
+        this.hearts--;
     }
 }

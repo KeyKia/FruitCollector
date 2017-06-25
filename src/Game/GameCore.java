@@ -97,10 +97,10 @@ class GameCore {
         } else {
             scenes.add(new GameScene(scene.getWidth() / 2 - 5, scene.getHeight(), root, scene.getWidth() / 2 + 5, TIME, player1));
             scenes.add(new GameScene(scene.getWidth() / 2 - 5, scene.getHeight(), root, 0.0, TIME, player2));
-            Canvas line = new Canvas(10, scene.getHeight());
+            Canvas line = new Canvas(5, scene.getHeight());
             line.getGraphicsContext2D().setFill(Color.LIGHTGRAY);
-            line.getGraphicsContext2D().fillRect(0, 0, 10, line.getHeight());
-            line.setLayoutX(scene.getWidth() / 2 - 5);
+            line.getGraphicsContext2D().fillRect(0, 0, 5, line.getHeight());
+            line.setLayoutX(scene.getWidth() / 2);
             root.getChildren().add(line);
         }
 
