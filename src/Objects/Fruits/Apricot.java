@@ -13,7 +13,7 @@ public class Apricot extends Fruits {
     private boolean direction;
 
     public Apricot() {
-        super(((int) (GameScene.UNIT * 5)), ( (30 * GameScene.UNIT / GameScene.SPEED_CONVERTER)), 30, img);
+        super(((int) (GameScene.UNIT * 5)), ( (20 * GameScene.UNIT / GameScene.SPEED_CONVERTER)), 30, img);
         direction = true;
     }
 

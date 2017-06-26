@@ -175,11 +175,22 @@ public class GameScene {
         for (Fruits fruit : fruitsCanvasMap.keySet()) {
             Canvas canvas = fruitsCanvasMap.get(fruit);
             if (canvas.getBoundsInParent().intersects(basketCanvas.getBoundsInParent())) {
-                if (canvas.getLayoutX() > basketCanvas.getLayoutX() + 4 && canvas.getLayoutX() + canvas.getWidth() < basketCanvas.getLayoutX() + basketCanvas.getWidth() - 4) {
-                    if (canvas.getLayoutY() >= basketCanvas.getLayoutY() - 7) {
-                        root.getChildren().remove(canvas);
-                        fruitCollected(fruit);
-                        fruitsCanvasMap.remove(fruit);
+                if (canvas.getLayoutX() + canvas.getWidth() / 2 > basketCanvas.getLayoutX() + basketCanvas.getWidth() / 10 && canvas.getLayoutX() + canvas.getWidth() < basketCanvas.getLayoutX() + 9.00 / 10 * basketCanvas.getWidth()) {
+                    if (canvas.getLayoutY() + canvas.getHeight() >= basketCanvas.getLayoutY() + basketCanvas.getHeight() / 2) {
+                        Timeline removeAnimation = new Timeline(new KeyFrame(Duration.millis(RENDER_SPEED), event -> {
+                            if (canvas.getScaleX() > 0) {
+                                canvas.setScaleX(canvas.getScaleX() - 0.1);
+                                canvas.setScaleY(canvas.getScaleY() - 0.1);
+                            }
+                        }));
+                        removeAnimation.setCycleCount(10);
+                        removeAnimation.play();
+                        removeAnimation.setOnFinished(event -> {
+                            root.getChildren().remove(canvas);
+                            fruitCollected(fruit);
+                            fruitsCanvasMap.remove(fruit);
+                        });
+
                         //TODO:play soundEffect if possible related to fruit type
                     }
                 }
@@ -199,7 +210,7 @@ public class GameScene {
 
         for (int i = hearts; i > 0; i--) {
             Canvas canvas = new Canvas(20 * UNIT, 20 * UNIT);
-            canvas.setLayoutX(start + width - (i * 25));
+            canvas.setLayoutX(start + width - (i * (canvas.getWidth() + 5)));
             canvas.setLayoutY(50);
             canvas.getGraphicsContext2D().drawImage(image, 0, 0, 20 * UNIT, 20 * UNIT);
             root.getChildren().add(canvas);
