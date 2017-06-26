@@ -177,9 +177,20 @@ public class GameScene {
             if (canvas.getBoundsInParent().intersects(basketCanvas.getBoundsInParent())) {
                 if (canvas.getLayoutX() + canvas.getWidth() / 2 > basketCanvas.getLayoutX() + basketCanvas.getWidth() / 10 && canvas.getLayoutX() + canvas.getWidth() < basketCanvas.getLayoutX() + 9.00 / 10 * basketCanvas.getWidth()) {
                     if (canvas.getLayoutY() + canvas.getHeight() >= basketCanvas.getLayoutY() + basketCanvas.getHeight() / 2) {
-                        root.getChildren().remove(canvas);
-                        fruitCollected(fruit);
-                        fruitsCanvasMap.remove(fruit);
+                        Timeline removeAnimation = new Timeline(new KeyFrame(Duration.millis(RENDER_SPEED), event -> {
+                            if (canvas.getScaleX() > 0) {
+                                canvas.setScaleX(canvas.getScaleX() - 0.1);
+                                canvas.setScaleY(canvas.getScaleY() - 0.1);
+                            }
+                        }));
+                        removeAnimation.setCycleCount(10);
+                        removeAnimation.play();
+                        removeAnimation.setOnFinished(event -> {
+                            root.getChildren().remove(canvas);
+                            fruitCollected(fruit);
+                            fruitsCanvasMap.remove(fruit);
+                        });
+
                         //TODO:play soundEffect if possible related to fruit type
                     }
                 }
