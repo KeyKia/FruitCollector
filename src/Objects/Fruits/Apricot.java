@@ -25,11 +25,11 @@ public class Apricot extends Fruits {
         if ( !direction && (startX-fruitCanvas.getLayoutX())/width*100>=3 )
             direction = !direction;
         if ( direction ) {
-            fruitCanvas.setLayoutX(fruitCanvas.getLayoutX() + speed);
+            fruitCanvas.setLayoutX(fruitCanvas.getLayoutX() + 1.5*speed);
             fruitCanvas.setLayoutY(fruitCanvas.getLayoutY() + speed);
         }
         else {
-            fruitCanvas.setLayoutX(fruitCanvas.getLayoutX() - speed);
+            fruitCanvas.setLayoutX(fruitCanvas.getLayoutX() - 1.5*speed);
             fruitCanvas.setLayoutY(fruitCanvas.getLayoutY() + speed);
         }
 
