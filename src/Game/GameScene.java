@@ -2,6 +2,9 @@ package Game;
 
 import Objects.Basket;
 import Objects.Fruits.Fruits;
+import Objects.Fruits.WormFreezer;
+import Objects.Fruits.WormHalfer;
+import Objects.Fruits.WormKiller;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -33,12 +36,17 @@ public class GameScene {
     private int time;
     private Text timerLbl = new Text();
     private PlayerInfo player;
+    private Basket basket;
 
     private Text score = new Text();
 
     private ArrayList<Canvas> heartsCanvas = new ArrayList<>();
 
     private Map<Fruits, Canvas> fruitsCanvasMap = new HashMap<>();
+
+    //worm collisions
+    private int freezeTime = 0;
+    private int halfTime = 0;
 
 
     private Timeline timer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
@@ -104,7 +112,7 @@ public class GameScene {
     }
 
     private void addBasket() {
-        Basket basket = new Basket(UNIT * 50, height / 10);
+        basket = new Basket(UNIT * 50, height / 10);
         basketCanvas = basket.getBasketCanvas();
         basketCanvas.setLayoutX(start + width / 2 - basketCanvas.getWidth() / 2);
         basketCanvas.setLayoutY(height + basketCanvas.getHeight() + 10);
@@ -119,6 +127,7 @@ public class GameScene {
     }
 
     void moveBasket(boolean left) {
+        if(this.freezeTime>0) return;
         double nextX;
         if (left)
             nextX = basketCanvas.getLayoutX() - (50 * UNIT) / SPEED_CONVERTER;
@@ -199,6 +208,16 @@ public class GameScene {
     }
 
     private void fruitCollected(Fruits fruit) {
+        //check if worm is collected
+        if(fruit instanceof WormFreezer)
+            this.freezeTime=3;
+        if(fruit instanceof WormKiller)
+            this.loseHeart();
+        if(fruit instanceof WormHalfer) {
+            this.halfTime = 10;
+            basket.halfTheBasket();
+        }
+
         player.addScore(fruit.getScore());
         score.setText(String.format("%05d", player.getScore()));
 
@@ -242,6 +261,20 @@ public class GameScene {
             });
         } else {
             //TODO: Game Over
+        }
+
+    }
+
+    public int getFreezeTime(){return this.freezeTime;}
+
+    public void minusFreezeTime(){this.freezeTime--;}
+
+    public int getHalfTime(){return this.halfTime;}
+
+    public void minusHalfTime(){
+        this.halfTime--;
+        if(this.halfTime < 1) {
+            basket.renormalTheBasket();
         }
 
     }

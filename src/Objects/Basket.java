@@ -10,11 +10,17 @@ import javafx.scene.image.Image;
  */
 public class Basket {
     private Canvas basketCanvas;
+    private double width;
+    private double height;
+    private Image basketImg;
+    private GraphicsContext gc;
 
     public Basket(double width, double height) {
         basketCanvas = new Canvas(width, height);
-        GraphicsContext gc = basketCanvas.getGraphicsContext2D();
-        Image basketImg = new Image("file:Resources/images/basket.png");
+        this.width=width;
+        this.height=height;
+        gc = basketCanvas.getGraphicsContext2D();
+        basketImg = new Image("file:Resources/images/basket.png");
         gc.drawImage(basketImg, 0, 0, width, height);
     }
 
@@ -22,5 +28,16 @@ public class Basket {
         return basketCanvas;
     }
 
+    public void halfTheBasket(){
+        basketCanvas.setWidth(width/2);
+        gc.clearRect(0, 0, width, height);
+        gc.drawImage(basketImg, 0, 0, width/2, height);
+    }
+
+    public void renormalTheBasket(){
+        basketCanvas.setWidth(width);
+        gc.clearRect(0, 0, width, height);
+        gc.drawImage(basketImg, 0, 0, width, height);
+    }
 
 }

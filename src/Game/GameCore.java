@@ -1,8 +1,6 @@
 package Game;
 
-import Objects.Fruits.Apricot;
-import Objects.Fruits.Orange;
-import Objects.Fruits.Watermelon;
+import Objects.Fruits.*;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -14,11 +12,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.util.Pair;
 
@@ -66,6 +62,9 @@ class GameCore {
             Orange t3 = new Orange();
             for (GameScene p : scenes) {
                 p.addFruits(t1, t2, t3);
+                //p.addFruits(new WormFreezer());
+                //p.addFruits(new WormKiller());
+                p.addFruits(new WormHalfer());
             }
         }
         if ( (time-1)%3 == 0 ) {
@@ -82,6 +81,17 @@ class GameCore {
             Watermelon t2 = new Watermelon();
             for (GameScene p : scenes)
                 p.addFruits(t1, t2);
+        }
+
+        //check if freeze worm had collision
+        for(GameScene gs: scenes){
+            if(gs.getFreezeTime() > 0){
+                gs.minusFreezeTime();
+            }
+            if(gs.getHalfTime() > 0){
+                System.out.println(gs.getHalfTime());
+                gs.minusHalfTime();
+            }
         }
     }));
 
@@ -190,44 +200,6 @@ class GameCore {
             }
         });
 
-        /*
-        if (false){
-            if (music) {
-                //loading sound effect file/files
-                String musicFile = "Resources/sounds/" + "BirdInRain" + ".mp3";
-
-                Media sound = new Media(new File(musicFile).toURI().toString());
-                backgroundEffectPlayer = new MediaPlayer(sound);
-                backgroundEffectPlayer.setOnEndOfMedia(() -> backgroundEffectPlayer.seek(Duration.ZERO));
-                backgroundEffectPlayer.play();
-
-            }
-
-            scene.setOnKeyPressed(GameCore::keyBoardHandler);
-            scene.setOnKeyReleased(GameCore::keyBoardHandler);
-
-
-            if (singlePlayer) {
-                scenes.add(new GameScene(scene.getWidth(), scene.getHeight(), root, 0.0, TIME, player1));
-            } else {
-                scenes.add(new GameScene(scene.getWidth() / 2 - 5, scene.getHeight(), root, scene.getWidth() / 2 + 5, TIME, player1));
-                scenes.add(new GameScene(scene.getWidth() / 2 - 5, scene.getHeight(), root, 0.0, TIME, player2));
-                Canvas line = new Canvas(5, scene.getHeight());
-                line.getGraphicsContext2D().setFill(Color.LIGHTGRAY);
-                line.getGraphicsContext2D().fillRect(0, 0, 5, line.getHeight());
-                line.setLayoutX(scene.getWidth() / 2);
-                root.getChildren().add(line);
-            }
-
-            movementHandler.setCycleCount(Timeline.INDEFINITE);
-            movementHandler.play();
-
-            gameTimer.setCycleCount(Animation.INDEFINITE);
-            gameTimer.play();
-        }else{
-
-        }
-        */
     }
 
     private static void keyBoardHandler(KeyEvent event) {
