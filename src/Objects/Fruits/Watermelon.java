@@ -12,12 +12,11 @@ public class Watermelon extends Fruits {
     static private final Image img = new Image("file:Resources/images/watermelon.png");
 
     public Watermelon() {
-        super(((int) (GameScene.UNIT * 30)), ((int) (100 * GameScene.UNIT / GameScene.SPEED_CONVERTER)), 60, img);
+        super(((int) (GameScene.UNIT * 30)), ( (100 * GameScene.UNIT / GameScene.SPEED_CONVERTER)), 60, img);
     }
 
     @Override
-    public void move(Canvas fruitCanvas) {
+    public void move(Canvas fruitCanvas, double width, double start) {
         fruitCanvas.setLayoutY(fruitCanvas.getLayoutY() + speed);
-        //TODO:find a way to rotate this canvas to create a falling effect
     }
 }

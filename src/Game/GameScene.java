@@ -23,7 +23,7 @@ import java.util.Map;
  * 9512762630
  */
 public class GameScene {
-    public static final int SPEED_CONVERTER = 60;
+    public static final double SPEED_CONVERTER = 60;
     static final int RENDER_SPEED = 1000 / 60;
     public static double UNIT;
     private double width, height;
@@ -162,7 +162,7 @@ public class GameScene {
 
     private void moveFruits() {
         for (Fruits fruit : fruitsCanvasMap.keySet()) {
-            fruit.move(fruitsCanvasMap.get(fruit));
+            fruit.move(fruitsCanvasMap.get(fruit), width, start);
             Canvas canvas = fruitsCanvasMap.get(fruit);
             if (canvas.getLayoutX() < start || canvas.getLayoutX() > start + width || canvas.getLayoutY() > height) {
                 fruitsCanvasMap.remove(fruit);

@@ -12,12 +12,12 @@ import java.util.Random;
 public abstract class Fruits {
     private final Image image;
     Random random = new Random();
-    int speed;
+    double speed;
     int position;
     private int radius;
     private int score;
 
-    Fruits(int radius, int speed, int score, Image image) {
+    Fruits(int radius, double speed, int score, Image image) {
         this.radius = radius;
         this.speed = speed;
         this.score = score;
@@ -42,7 +42,7 @@ public abstract class Fruits {
         return score;
     }
 
-    public abstract void move(Canvas fruitCanvas);
+    public abstract void move(Canvas fruitCanvas, double width, double start);
 
 
 }

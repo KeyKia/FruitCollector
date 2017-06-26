@@ -1,5 +1,6 @@
 package Game;
 
+import Objects.Fruits.Apricot;
 import Objects.Fruits.Orange;
 import Objects.Fruits.Watermelon;
 import javafx.animation.Animation;
@@ -57,6 +58,15 @@ class GameCore {
             Orange t3 = new Orange();
             for (GameScene p : scenes) {
                 p.addFruits(t1, t2, t3);
+            }
+        }
+        if ( (time-1)%3 == 0 ) {
+            Apricot t1 = new Apricot();
+            Apricot t2 = new Apricot();
+            Apricot t3 = new Apricot();
+            Apricot t4 = new Apricot();
+            for (GameScene p : scenes) {
+                p.addFruits(t1, t2, t3, t4);
             }
         }
         if ((time - 2) % 3 == 0) {
