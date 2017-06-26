@@ -24,11 +24,11 @@ import java.util.ArrayList;
 class GameCore {
 
     private static final int TIME = 120;
+    static HighScore scores = new HighScore();
     private static boolean a = false, d = false, left = false, right = false;
+    private static ArrayList<GameScene> scenes = new ArrayList<>();
     private boolean singlePlayer;
-    private ArrayList<GameScene> scenes = new ArrayList<>();
     private int time = 0;
-
     //sound vars
     private MediaPlayer backgroundEffectPlayer = null;
 
@@ -76,8 +76,6 @@ class GameCore {
         player1 = new PlayerInfo("Jeem");
         player2 = new PlayerInfo("Jim");
         ////////////////////////////////////////////
-
-
         if (music) {
             //loading sound effect file/files
             String musicFile = "Resources/sounds/" + "BirdInRain" + ".mp3";
@@ -132,6 +130,10 @@ class GameCore {
             default:
                 break;
         }
+    }
+
+    static void removeScene(GameScene scene) {
+        scenes.remove(scene);
     }
 
 
