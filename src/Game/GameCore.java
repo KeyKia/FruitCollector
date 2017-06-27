@@ -6,6 +6,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -288,6 +289,28 @@ class GameCore {
         root.getChildren().add(back);
         // show HighScores
         root.getChildren().addAll(scoreBoard.getHighScoreScene(mainScene.getWidth() / 4, mainScene.getHeight() / 4, mainScene.getWidth() / 2, mainScene.getHeight() / 2));
+        Button btnExit = new Button("Exit");
+        Button btnAgain = new Button("Playe Again");
+        root.getChildren().addAll(btnExit, btnAgain);
+        btnExit.setLayoutY(mainScene.getHeight()-5*mainScene.getHeight()/100);
+        btnAgain.setLayoutY(mainScene.getHeight()-5*mainScene.getHeight()/100);
+        btnExit.setLayoutX(mainScene.getWidth()/2-5*mainScene.getWidth()/100);
+        btnAgain.setLayoutX(mainScene.getWidth()/2+5*mainScene.getWidth()/100);
+
+        btnExit.setOnAction( new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                System.exit(0);
+            }
+        });
+
+        btnAgain.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                backgroundEffectPlayer.pause();
+                Main.resetGame();
+            }
+        });
     }
 
 }
