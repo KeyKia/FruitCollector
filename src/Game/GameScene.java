@@ -45,6 +45,7 @@ public class GameScene {
     private int freezeTime = 0;
     private int halfTime = 0;
     private int doubleTime = 0;
+    int wormFreezeTime = 0;
 
 
     private Timeline timer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
@@ -222,6 +223,8 @@ public class GameScene {
             this.halfTime = 0;
             basket.doubleTheBasket();
         }
+        if ( fruit instanceof MagicWormFreezer )
+            wormFreezeTime = 10;
 
         player.addScore(fruit.getScore());
         score.setText(String.format("%05d", player.getScore()));
@@ -289,6 +292,5 @@ public class GameScene {
         if(this.halfTime < 1) {
             basket.renormalTheBasket();
         }
-
     }
 }

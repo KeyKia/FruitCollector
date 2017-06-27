@@ -53,9 +53,9 @@ class GameCore {
     private PlayerInfo player1, player2;
 
     private Timeline gameTimer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-        //TODO: revission fruit fallings -> plan every 30 s + add worm
+        //TODO: plan each 30 seconds
+        //TODO: take care of wormFreezeTime
         time++;
-        // Plan each 30 seconds
         if (time % 3 == 0) {
             Orange t1 = new Orange();
             Orange t2 = new Orange();
@@ -79,7 +79,7 @@ class GameCore {
         if ((time - 2) % 3 == 0) {
             Watermelon t1 = new Watermelon();
             Watermelon t2 = new Watermelon();
-            MagicDoubler t3 = new MagicDoubler();
+            MagicWormFreezer t3 = new MagicWormFreezer();
             for (GameScene p : scenes)
                 p.addFruits(t1, t2, t3);
         }
@@ -95,6 +95,8 @@ class GameCore {
             }
             if(gs.getDoubleTime() > 0)
                 gs.minusDoubleTime();
+            if(gs.wormFreezeTime>0)
+                gs.wormFreezeTime--;
         }
     }));
 
