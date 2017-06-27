@@ -99,8 +99,6 @@ class GameCore {
 
         this.singlePlayer = singlePlayer;
 
-        //TODO:dialog to get names of player and create player 1 and 2(using method)
-
         //FOR DEBUGGING ONLY
 
         Platform.runLater(new Runnable() {

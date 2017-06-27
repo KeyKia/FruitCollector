@@ -29,9 +29,23 @@ public class Basket {
     }
 
     public void halfTheBasket(){
+        if ( basketCanvas.getWidth()==width*2 ) {
+            renormalTheBasket();
+            return;
+        }
         basketCanvas.setWidth(width/2);
         gc.clearRect(0, 0, width, height);
         gc.drawImage(basketImg, 0, 0, width/2, height);
+    }
+
+    public void doubleTheBasket(){
+        if ( basketCanvas.getWidth()==width/2 ) {
+            renormalTheBasket();
+            return;
+        }
+        basketCanvas.setWidth(width*2);
+        gc.clearRect(0, 0, width, height);
+        gc.drawImage(basketImg, 0, 0, width*2, height);
     }
 
     public void renormalTheBasket(){
