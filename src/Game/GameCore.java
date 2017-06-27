@@ -5,6 +5,7 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -184,6 +185,9 @@ class GameCore {
             dialog.setResultConverter(dialogButton -> {
                 if (dialogButton == loginButtonType) {
                     return new Pair<>(player1.getText(), player2.getText());
+                }else{
+                    //the dialog was cancelled
+                    Main.resetGame();
                 }
                 return null;
             });
@@ -191,6 +195,10 @@ class GameCore {
             Optional<Pair<String, String>> result = dialog.showAndWait();
             //dialog add section finished here
             //////////////////////////////////
+            final Button cancel = (Button) dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+            cancel.addEventFilter(ActionEvent.ACTION, event ->
+                    System.out.println("Cancel was definitely pressed")
+            );
 
 
             result.ifPresent(names -> {

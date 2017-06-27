@@ -48,7 +48,7 @@ class GameInit {
 
             Media sound = new Media(new File(musicFile).toURI().toString());
             backgroundEffectPlayer = new MediaPlayer(sound);
-        backgroundEffectPlayer.setOnEndOfMedia(() -> backgroundEffectPlayer.seek(Duration.ZERO));
+            backgroundEffectPlayer.setOnEndOfMedia(() -> backgroundEffectPlayer.seek(Duration.ZERO));
             backgroundEffectPlayer.play();
 
 
@@ -62,7 +62,6 @@ class GameInit {
         EventHandler<MouseEvent> startGame = event -> {
             //TODO:play click Sound Effect
             if (event.getSource() == singlePlayerBtn) {
-
                 startGameAnimation(true);
                 this.backgroundEffectPlayer.stop();
             } else if (event.getSource() == multiPlayerBtn) {
@@ -109,6 +108,8 @@ class GameInit {
         root.getChildren().addAll(singlePlayerBtn, multiPlayerBtn, soundEffect, music, title);
 
     }
+
+    public Stage getStage(){return this.stage;}
 
     private void setSoundEffectSts(boolean soundEffect) {
         this.soundEffectSts = soundEffect;
