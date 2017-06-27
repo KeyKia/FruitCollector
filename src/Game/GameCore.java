@@ -199,7 +199,7 @@ class GameCore {
 
                 if (music) {
                     //loading sound effect file/files
-                    String musicFile = "Resources/sounds/" + "BirdInRain" + ".mp3";
+                    String musicFile = "Resources/sounds/" + "arcadeFunk" + ".mp3";
 
                     Media sound = new Media(new File(musicFile).toURI().toString());
                     backgroundEffectPlayer = new MediaPlayer(sound);
@@ -213,10 +213,10 @@ class GameCore {
 
 
                 if (singlePlayer) {
-                    scenes.add(new GameScene(scene.getWidth(), scene.getHeight(), root, 0.0, TIME, GameCore.this.player1));
+                    scenes.add(new GameScene(scene.getWidth(), scene.getHeight(), root, 0.0, TIME, GameCore.this.player1, soundEffect));
                 } else {
-                    scenes.add(new GameScene(scene.getWidth() / 2 - 5, scene.getHeight(), root, scene.getWidth() / 2 + 5, TIME, GameCore.this.player1));
-                    scenes.add(new GameScene(scene.getWidth() / 2 - 5, scene.getHeight(), root, 0.0, TIME, GameCore.this.player2));
+                    scenes.add(new GameScene(scene.getWidth() / 2 - 5, scene.getHeight(), root, scene.getWidth() / 2 + 5, TIME, GameCore.this.player1, soundEffect));
+                    scenes.add(new GameScene(scene.getWidth() / 2 - 5, scene.getHeight(), root, 0.0, TIME, GameCore.this.player2, soundEffect));
                     Canvas line = new Canvas(5, scene.getHeight());
                     line.getGraphicsContext2D().setFill(Color.LIGHTGRAY);
                     line.getGraphicsContext2D().fillRect(0, 0, 5, line.getHeight());
