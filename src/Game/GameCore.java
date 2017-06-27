@@ -5,11 +5,13 @@ import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
@@ -31,21 +33,26 @@ class GameCore {
 
     private static final int TIME = 120;
     private static boolean a = false, d = false, left = false, right = false;
+    private static ArrayList<GameScene> scenes = new ArrayList<>();
+    private static HighScores scoreBoard = new HighScores();
     private boolean singlePlayer;
-    private ArrayList<GameScene> scenes = new ArrayList<>();
     private ArrayList<ArrayList<Fruits>> fruits = new ArrayList<>();
     private int time = 0;
     private int wormPer3Secs = 2;
+    private Scene mainScene;
+    private Group root;
+
 
     //sound vars
     private MediaPlayer backgroundEffectPlayer = null;
 
     private Timeline movementHandler = new Timeline(new KeyFrame(Duration.millis(GameScene.RENDER_SPEED), event -> {
-        if (left)
-            scenes.get(0).moveBasket(true);
-        else if (right)
-            scenes.get(0).moveBasket(false);
-        if (!singlePlayer) {
+        if (scenes.size() > 0)
+            if (left)
+                scenes.get(0).moveBasket(true);
+            else if (right)
+                scenes.get(0).moveBasket(false);
+        if (scenes.size() > 1) {
             if (a)
                 scenes.get(1).moveBasket(true);
             else if (d)
@@ -132,13 +139,18 @@ class GameCore {
                 gs.wormFreezeTime--;
         }
         time++;
+
+        if (scenes.size() == 0)
+            gameOver();
+
     }));
 
     GameCore(boolean music, boolean soundEffect, boolean singlePlayer, Scene scene, Group root) {
 
         this.singlePlayer = singlePlayer;
+        this.mainScene = scene;
+        this.root = root;
 
-        //FOR DEBUGGING ONLY
 
         Platform.runLater(() -> {
             //////////////////////////////////
@@ -184,6 +196,9 @@ class GameCore {
             dialog.setResultConverter(dialogButton -> {
                 if (dialogButton == loginButtonType) {
                     return new Pair<>(player1.getText(), player2.getText());
+                }else{
+                    //the dialog was cancelled
+                    Main.resetGame();
                 }
                 return null;
             });
@@ -191,6 +206,10 @@ class GameCore {
             Optional<Pair<String, String>> result = dialog.showAndWait();
             //dialog add section finished here
             //////////////////////////////////
+            final Button cancel = (Button) dialog.getDialogPane().lookupButton(ButtonType.CANCEL);
+            cancel.addEventFilter(ActionEvent.ACTION, event ->
+                    System.out.println("Cancel was definitely pressed")
+            );
 
 
             result.ifPresent(names -> {
@@ -199,7 +218,7 @@ class GameCore {
 
                 if (music) {
                     //loading sound effect file/files
-                    String musicFile = "Resources/sounds/" + "BirdInRain" + ".mp3";
+                    String musicFile = "Resources/sounds/" + "arcadeFunk" + ".mp3";
 
                     Media sound = new Media(new File(musicFile).toURI().toString());
                     backgroundEffectPlayer = new MediaPlayer(sound);
@@ -213,10 +232,10 @@ class GameCore {
 
 
                 if (singlePlayer) {
-                    scenes.add(new GameScene(scene.getWidth(), scene.getHeight(), root, 0.0, TIME, GameCore.this.player1));
+                    scenes.add(new GameScene(scene.getWidth(), scene.getHeight(), root, 0.0, TIME, GameCore.this.player1, soundEffect));
                 } else {
-                    scenes.add(new GameScene(scene.getWidth() / 2 - 5, scene.getHeight(), root, scene.getWidth() / 2 + 5, TIME, GameCore.this.player1));
-                    scenes.add(new GameScene(scene.getWidth() / 2 - 5, scene.getHeight(), root, 0.0, TIME, GameCore.this.player2));
+                    scenes.add(new GameScene(scene.getWidth() / 2 - 5, scene.getHeight(), root, scene.getWidth() / 2 + 5, TIME, GameCore.this.player1, soundEffect));
+                    scenes.add(new GameScene(scene.getWidth() / 2 - 5, scene.getHeight(), root, 0.0, TIME, GameCore.this.player2, soundEffect));
                     Canvas line = new Canvas(5, scene.getHeight());
                     line.getGraphicsContext2D().setFill(Color.LIGHTGRAY);
                     line.getGraphicsContext2D().fillRect(0, 0, 5, line.getHeight());
@@ -255,5 +274,20 @@ class GameCore {
         }
     }
 
+    static void sceneOver(GameScene scene) {
+        scenes.remove(scene);
+        scoreBoard.addScore(scene.getPlayer());
+    }
+
+    void gameOver() {
+        gameTimer.stop();
+        movementHandler.stop();
+        Image backImage = new Image("file:Resources/images/JungleBack.png");
+        Canvas back = new Canvas(mainScene.getWidth(), mainScene.getHeight());
+        back.getGraphicsContext2D().drawImage(backImage, 0, 0, mainScene.getWidth(), mainScene.getHeight());
+        root.getChildren().add(back);
+        // show HighScores
+        root.getChildren().addAll(scoreBoard.getHighScoreScene(mainScene.getWidth() / 4, mainScene.getHeight() / 4, mainScene.getWidth() / 2, mainScene.getHeight() / 2));
+    }
 
 }

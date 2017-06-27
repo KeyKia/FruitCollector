@@ -8,7 +8,7 @@ import javafx.scene.image.Image;
  * Created by jeem on 6/26/2017.
  */
 public class WormFreezer extends Fruits {
-    static private final Image img = new Image("file:Resources/images/wormFreezer.png");
+    static private final Image img = new Image("file:Resources/images/worms/wormFreezer.png");
 
     public WormFreezer() {
         super(((int) (GameScene.UNIT * 30)), ( (100 * GameScene.UNIT / GameScene.SPEED_CONVERTER)), 0, img);

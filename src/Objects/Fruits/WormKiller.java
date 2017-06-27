@@ -8,7 +8,7 @@ import javafx.scene.image.Image;
  * Created by jeem on 6/27/2017.
  */
 public class WormKiller extends Fruits {
-    static private final Image img = new Image("file:Resources/images/wormKiller.png");
+    static private final Image img = new Image("file:Resources/images/worms/wormKiller.png");
 
     public WormKiller() {
         super(((int) (GameScene.UNIT * 30)), ( (100 * GameScene.UNIT / GameScene.SPEED_CONVERTER)), 0, img);
