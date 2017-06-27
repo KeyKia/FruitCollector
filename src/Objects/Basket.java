@@ -31,7 +31,6 @@ public class Basket {
         return basketCanvas;
     }
 
-    //TODO: Bug -> the if condition in the following methods doesn't seem to work properly
 
     public void halfTheBasket(){
         double newValue = basketCanvas.getWidth() / 2;

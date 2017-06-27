@@ -11,6 +11,7 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
@@ -32,21 +33,26 @@ class GameCore {
 
     private static final int TIME = 120;
     private static boolean a = false, d = false, left = false, right = false;
+    private static ArrayList<GameScene> scenes = new ArrayList<>();
+    private static HighScores scoreBoard = new HighScores();
     private boolean singlePlayer;
-    private ArrayList<GameScene> scenes = new ArrayList<>();
     private ArrayList<ArrayList<Fruits>> fruits = new ArrayList<>();
     private int time = 0;
     private int wormPer3Secs = 2;
+    private Scene mainScene;
+    private Group root;
+
 
     //sound vars
     private MediaPlayer backgroundEffectPlayer = null;
 
     private Timeline movementHandler = new Timeline(new KeyFrame(Duration.millis(GameScene.RENDER_SPEED), event -> {
-        if (left)
-            scenes.get(0).moveBasket(true);
-        else if (right)
-            scenes.get(0).moveBasket(false);
-        if (!singlePlayer) {
+        if (scenes.size() > 0)
+            if (left)
+                scenes.get(0).moveBasket(true);
+            else if (right)
+                scenes.get(0).moveBasket(false);
+        if (scenes.size() > 1) {
             if (a)
                 scenes.get(1).moveBasket(true);
             else if (d)
@@ -133,13 +139,18 @@ class GameCore {
                 gs.wormFreezeTime--;
         }
         time++;
+
+        if (scenes.size() == 0)
+            gameOver();
+
     }));
 
     GameCore(boolean music, boolean soundEffect, boolean singlePlayer, Scene scene, Group root) {
 
         this.singlePlayer = singlePlayer;
+        this.mainScene = scene;
+        this.root = root;
 
-        //FOR DEBUGGING ONLY
 
         Platform.runLater(() -> {
             //////////////////////////////////
@@ -263,5 +274,20 @@ class GameCore {
         }
     }
 
+    static void sceneOver(GameScene scene) {
+        scenes.remove(scene);
+        scoreBoard.addScore(scene.getPlayer());
+    }
+
+    void gameOver() {
+        gameTimer.stop();
+        movementHandler.stop();
+        Image backImage = new Image("file:Resources/images/JungleBack.png");
+        Canvas back = new Canvas(mainScene.getWidth(), mainScene.getHeight());
+        back.getGraphicsContext2D().drawImage(backImage, 0, 0, mainScene.getWidth(), mainScene.getHeight());
+        root.getChildren().add(back);
+        // show HighScores
+        root.getChildren().addAll(scoreBoard.getHighScoreScene(mainScene.getWidth() / 4, mainScene.getHeight() / 4, mainScene.getWidth() / 2, mainScene.getHeight() / 2));
+    }
 
 }

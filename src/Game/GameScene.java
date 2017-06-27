@@ -48,13 +48,6 @@ public class GameScene {
 
     private boolean soundEffectEnabled = false;
     private MediaPlayer gameSoundEffect = null;
-
-    private Timeline timer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-        time--;
-        timerLbl.setText(convertTimeToString());
-
-    }));
-
     private Timeline objectsHandler = new Timeline(new KeyFrame(Duration.millis(RENDER_SPEED), event -> {
         try {
             moveFruits();
@@ -62,6 +55,13 @@ public class GameScene {
         } catch (ConcurrentModificationException e) {
             //just to prevent default handling
         }
+
+    }));
+    private Timeline timer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
+        time--;
+        timerLbl.setText(convertTimeToString());
+        if (time <= 0)
+            gameOver();
 
     }));
 
@@ -146,11 +146,8 @@ public class GameScene {
         return String.format("%02d:%02d", min, sec);
     }
 
-    public int getTime() {
-        return time;
-    }
 
-    public void addTime(int t) {
+    private void addTime(int t) {
         this.time += t;
     }
 
@@ -166,10 +163,18 @@ public class GameScene {
     }
 
     private void gameOver() {
-        if (time < 0) {
-            timer.stop();
-            objectsHandler.stop();
+        objectsHandler.stop();
+        timer.stop();
+        for (Fruits fruit : fruitsCanvasMap.keySet()) {
+            root.getChildren().remove(fruitsCanvasMap.get(fruit));
         }
+        fruitsCanvasMap.clear();
+        root.getChildren().remove(basketCanvas);
+        GameCore.sceneOver(this);
+        Text wait = new Text(start + width / 2, height / 2, "Wait For the game to finish");
+        root.getChildren().add(wait);
+
+
     }
 
     private void moveFruits() {
@@ -199,11 +204,8 @@ public class GameScene {
                         }));
                         removeAnimation.setCycleCount(10);
                         removeAnimation.play();
-                        removeAnimation.setOnFinished(event -> {
-                            root.getChildren().remove(canvas);
-                        });
+                        removeAnimation.setOnFinished(event -> root.getChildren().remove(canvas));
 
-                        //TODO:play soundEffect if possible related to fruit type
                     }
                 }
             }
@@ -274,61 +276,68 @@ public class GameScene {
     }
 
     private void loseHeart() {
-        if (heartsCanvas.size() > 0) {
+        player.loseHart();
+        Canvas canvas = heartsCanvas.get(0);
+        canvas.getGraphicsContext2D().setGlobalBlendMode(BlendMode.SCREEN);
 
-            Canvas canvas = heartsCanvas.get(0);
-            canvas.getGraphicsContext2D().setGlobalBlendMode(BlendMode.SCREEN);
+        Image image = new Image("file:Resources/images/heart.png");
 
-            Image image = new Image("file:Resources/images/heart.png");
+        Timeline removeHeartAnimation = new Timeline(new KeyFrame(Duration.millis(RENDER_SPEED), event -> {
+            if (canvas.getScaleX() < 2) {
+                canvas.setScaleX(canvas.getScaleX() + 0.1);
+                canvas.setScaleY(canvas.getScaleY() + 0.1);
+                canvas.getGraphicsContext2D().drawImage(image, 0, 0, canvas.getWidth(), canvas.getHeight());
+            }
+        }));
 
-            Timeline removeHeartAnimation = new Timeline(new KeyFrame(Duration.millis(RENDER_SPEED), event -> {
-                if (canvas.getScaleX() < 2) {
-                    canvas.setScaleX(canvas.getScaleX() + 0.1);
-                    canvas.setScaleY(canvas.getScaleY() + 0.1);
-                    canvas.getGraphicsContext2D().drawImage(image, 0, 0, canvas.getWidth(), canvas.getHeight());
-                }
-            }));
+        removeHeartAnimation.setCycleCount(10);
+        removeHeartAnimation.play();
+        removeHeartAnimation.setOnFinished(event -> {
+            root.getChildren().remove(canvas);
+            heartsCanvas.remove(canvas);
+            if (heartsCanvas.size() == 0)
+                gameOver();
+        });
 
-            removeHeartAnimation.setCycleCount(10);
-            removeHeartAnimation.play();
-            removeHeartAnimation.setOnFinished(event -> {
-                root.getChildren().remove(canvas);
-                heartsCanvas.remove(canvas);
-            });
-        } else {
-            //TODO: Game Over
-        }
 
     }
 
-    public int getDoubleTime() { return this.doubleTime; }
+    int getDoubleTime() {
+        return this.doubleTime;
+    }
 
-    public void minusDoubleTime() {
+    void minusDoubleTime() {
         this.doubleTime--;
         if ( this.doubleTime < 1 )
             basket.renormalTheBasket();
     }
 
-    public int getFreezeTime(){return this.freezeTime;}
+    int getFreezeTime() {
+        return this.freezeTime;
+    }
 
-    public void minusFreezeTime(){this.freezeTime--;}
+    void minusFreezeTime() {
+        this.freezeTime--;
+    }
 
-    public int getHalfTime(){return this.halfTime;}
+    int getHalfTime() {
+        return this.halfTime;
+    }
 
-    public void minusHalfTime(){
+    void minusHalfTime() {
         this.halfTime--;
         if(this.halfTime < 1) {
             basket.renormalTheBasket();
         }
     }
 
-    void makeBasketSizeHalf(int duration) {
+    private void makeBasketSizeHalf(int duration) {
         basket.halfTheBasket();
         Timeline reNormalize = new Timeline(new KeyFrame(Duration.seconds(duration), event -> basket.doubleTheBasket()));
         reNormalize.play();
     }
 
-    void makeBasketSizeDouble(int duration) {
+    private void makeBasketSizeDouble(int duration) {
         basket.doubleTheBasket();
         Timeline reNormalize = new Timeline(new KeyFrame(Duration.seconds(duration), event -> basket.halfTheBasket()));
         reNormalize.play();
@@ -343,4 +352,10 @@ public class GameScene {
         }
 
     }
+
+    PlayerInfo getPlayer() {
+        return player;
+    }
+
+
 }

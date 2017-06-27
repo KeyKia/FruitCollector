@@ -109,7 +109,9 @@ class GameInit {
 
     }
 
-    public Stage getStage(){return this.stage;}
+    Stage getStage() {
+        return this.stage;
+    }
 
     private void setSoundEffectSts(boolean soundEffect) {
         this.soundEffectSts = soundEffect;
