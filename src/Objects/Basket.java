@@ -28,24 +28,26 @@ public class Basket {
         return basketCanvas;
     }
 
+    //TODO: Bug -> the if condition in the following methods doesn't seem to work properly
+
     public void halfTheBasket(){
-        if ( basketCanvas.getWidth()==width*2 ) {
-            renormalTheBasket();
-            return;
+        if ( basketCanvas.getWidth()==width*2 )
+            this.renormalTheBasket();
+        else {
+            basketCanvas.setWidth(width / 2);
+            gc.clearRect(0, 0, width, height);
+            gc.drawImage(basketImg, 0, 0, width / 2, height);
         }
-        basketCanvas.setWidth(width/2);
-        gc.clearRect(0, 0, width, height);
-        gc.drawImage(basketImg, 0, 0, width/2, height);
     }
 
     public void doubleTheBasket(){
-        if ( basketCanvas.getWidth()==width/2 ) {
-            renormalTheBasket();
-            return;
+        if ( basketCanvas.getWidth()==width/2 )
+            this.renormalTheBasket();
+        else {
+            basketCanvas.setWidth(width * 2);
+            gc.clearRect(0, 0, width, height);
+            gc.drawImage(basketImg, 0, 0, width * 2, height);
         }
-        basketCanvas.setWidth(width*2);
-        gc.clearRect(0, 0, width, height);
-        gc.drawImage(basketImg, 0, 0, width*2, height);
     }
 
     public void renormalTheBasket(){

@@ -1,10 +1,7 @@
 package Game;
 
 import Objects.Basket;
-import Objects.Fruits.Fruits;
-import Objects.Fruits.WormFreezer;
-import Objects.Fruits.WormHalfer;
-import Objects.Fruits.WormKiller;
+import Objects.Fruits.*;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -47,6 +44,7 @@ public class GameScene {
     //worm collisions
     private int freezeTime = 0;
     private int halfTime = 0;
+    private int doubleTime = 0;
 
 
     private Timeline timer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
@@ -218,6 +216,13 @@ public class GameScene {
             basket.halfTheBasket();
         }
 
+        //check if any magical fruit is collected
+        if ( fruit instanceof MagicDoubler ) {
+            this.doubleTime = 10;
+            this.halfTime = 0;
+            basket.doubleTheBasket();
+        }
+
         player.addScore(fruit.getScore());
         score.setText(String.format("%05d", player.getScore()));
 
@@ -263,6 +268,14 @@ public class GameScene {
             //TODO: Game Over
         }
 
+    }
+
+    public int getDoubleTime() { return this.doubleTime; }
+
+    public void minusDoubleTime() {
+        this.doubleTime--;
+        if ( this.doubleTime < 1 )
+            basket.renormalTheBasket();
     }
 
     public int getFreezeTime(){return this.freezeTime;}

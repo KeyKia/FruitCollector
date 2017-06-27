@@ -79,8 +79,9 @@ class GameCore {
         if ((time - 2) % 3 == 0) {
             Watermelon t1 = new Watermelon();
             Watermelon t2 = new Watermelon();
+            MagicDoubler t3 = new MagicDoubler();
             for (GameScene p : scenes)
-                p.addFruits(t1, t2);
+                p.addFruits(t1, t2, t3);
         }
 
         //check if freeze worm had collision
@@ -89,9 +90,11 @@ class GameCore {
                 gs.minusFreezeTime();
             }
             if(gs.getHalfTime() > 0){
-                System.out.println(gs.getHalfTime());
+                //System.out.println(gs.getHalfTime());
                 gs.minusHalfTime();
             }
+            if(gs.getDoubleTime() > 0)
+                gs.minusDoubleTime();
         }
     }));
 
