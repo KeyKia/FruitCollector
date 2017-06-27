@@ -146,8 +146,8 @@ public class GameScene {
         return time;
     }
 
-    public void setTime(int time) {
-        this.time = time;
+    public void addTime(int t) {
+        this.time += t;
     }
 
     void addFruits(Fruits... fruits) {
@@ -225,6 +225,10 @@ public class GameScene {
         }
         if ( fruit instanceof MagicWormFreezer )
             wormFreezeTime = 10;
+        if ( fruit instanceof MagicTimeExtender ) {
+            addTime(10);
+            timerLbl.setText(convertTimeToString());
+        }
 
         player.addScore(fruit.getScore());
         score.setText(String.format("%05d", player.getScore()));

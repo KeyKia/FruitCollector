@@ -79,12 +79,12 @@ class GameCore {
         if ((time - 2) % 3 == 0) {
             Watermelon t1 = new Watermelon();
             Watermelon t2 = new Watermelon();
-            MagicWormFreezer t3 = new MagicWormFreezer();
+            MagicTimeExtender t3 = new MagicTimeExtender();
             for (GameScene p : scenes)
                 p.addFruits(t1, t2, t3);
         }
 
-        //check if freeze worm had collision
+        //check if freeze worm or magicFruit had collision
         for(GameScene gs: scenes){
             if(gs.getFreezeTime() > 0){
                 gs.minusFreezeTime();
