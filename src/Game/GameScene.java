@@ -222,21 +222,31 @@ public class GameScene {
             addTime(10);
             timerLbl.setText(convertTimeToString());
         }
+        if ( fruit instanceof MagicHeartBonus ) {
+            player.addHearts();
+            Canvas canvas = heart(player.getHearts());
+            root.getChildren().add(canvas);
+            heartsCanvas.add(canvas);
+        }
 
         player.addScore(fruit.getScore());
         score.setText(String.format("%05d", player.getScore()));
 
     }
 
+    private Canvas heart ( int i ) {
+        Image image = new Image("file:Resources/images/heart.png");
+        Canvas canvas = new Canvas(20 * UNIT, 20 * UNIT);
+        canvas.setLayoutX(start + width - (i * (canvas.getWidth() + 5)));
+        canvas.setLayoutY(50);
+        canvas.getGraphicsContext2D().drawImage(image, 0, 0, 20 * UNIT, 20 * UNIT);
+        return canvas;
+    }
+
     private void addHearts() {
         int hearts = player.getHearts();
-        Image image = new Image("file:Resources/images/heart.png");
-
         for (int i = hearts; i > 0; i--) {
-            Canvas canvas = new Canvas(20 * UNIT, 20 * UNIT);
-            canvas.setLayoutX(start + width - (i * (canvas.getWidth() + 5)));
-            canvas.setLayoutY(50);
-            canvas.getGraphicsContext2D().drawImage(image, 0, 0, 20 * UNIT, 20 * UNIT);
+            Canvas canvas = heart(i);
             root.getChildren().add(canvas);
             heartsCanvas.add(canvas);
         }

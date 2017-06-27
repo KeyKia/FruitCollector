@@ -79,7 +79,7 @@ class GameCore {
         if ((time - 2) % 3 == 0) {
             Watermelon t1 = new Watermelon();
             Watermelon t2 = new Watermelon();
-            MagicTimeExtender t3 = new MagicTimeExtender();
+            MagicHeartBonus t3 = new MagicHeartBonus();
             for (GameScene p : scenes)
                 p.addFruits(t1, t2, t3);
         }

@@ -37,6 +37,8 @@ public class PlayerInfo {
         return hearts;
     }
 
+    public void addHearts() { this.hearts++; }
+
     public void loseHart() {
         this.hearts--;
     }
