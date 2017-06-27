@@ -17,7 +17,7 @@ public class MagicWormFreezer extends Fruits {
         if (position > 10 && position < 90)
             left = random.nextBoolean();
         else left = position > 10;
-        angel = random.nextInt(60) + 30;
+        angel = random.nextInt(30) + 30;
         double a = speed / Math.sin(angel);
         horizantalSpeed = a * Math.cos(angel);
     }

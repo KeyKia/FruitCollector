@@ -21,6 +21,7 @@ import javafx.util.Pair;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Random;
 
 /**
  * Created by Ali Jamadi on 6/23/17.
@@ -32,7 +33,9 @@ class GameCore {
     private static boolean a = false, d = false, left = false, right = false;
     private boolean singlePlayer;
     private ArrayList<GameScene> scenes = new ArrayList<>();
+    private ArrayList<ArrayList<Fruits>> fruits = new ArrayList<>();
     private int time = 0;
+    private int wormPer3Secs = 2;
 
     //sound vars
     private MediaPlayer backgroundEffectPlayer = null;
@@ -53,35 +56,64 @@ class GameCore {
     private PlayerInfo player1, player2;
 
     private Timeline gameTimer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
-        //TODO: plan each 30 seconds
-        //TODO: take care of wormFreezeTime
-        time++;
-        if (time % 3 == 0) {
-            Orange t1 = new Orange();
-            Orange t2 = new Orange();
-            Orange t3 = new Orange();
-            for (GameScene p : scenes) {
-                p.addFruits(t1, t2, t3);
-                //p.addFruits(new WormFreezer());
-                //p.addFruits(new WormKiller());
-                p.addFruits(new WormHalfer());
+
+        if ( time%30==0 ) {
+            fruits.clear();
+            for ( int i=0; i<40; i++ )
+                fruits.add(new ArrayList<>());
+            Random random = new Random();
+            for ( int i=0; i<30; i+=3 ) {
+                int a[] = new int[10];
+                a[0] = random.nextInt(3);
+                a[1] = random.nextInt(3);
+                a[2] = random.nextInt(3);
+                fruits.get(i+a[0]).add(new Orange());
+                fruits.get(i+a[1]).add(new Orange());
+                fruits.get(i+a[2]).add(new Orange());
+
+                a[0] = random.nextInt(3);
+                a[1] = random.nextInt(3);
+                a[2] = random.nextInt(3);
+                a[3] = random.nextInt(3);
+                fruits.get(i+a[0]).add(new Apricot());
+                fruits.get(i+a[1]).add(new Apricot());
+                fruits.get(i+a[2]).add(new Apricot());
+                fruits.get(i+a[3]).add(new Apricot());
+
+                a[0] = random.nextInt(3);
+                a[1] = random.nextInt(3);
+                fruits.get(i+a[0]).add(new Watermelon());
+                fruits.get(i+a[1]).add(new Watermelon());
+
+                for ( int j=0; j<wormPer3Secs; j++ ) {
+                    a[j] = random.nextInt(3);
+                    int type = random.nextInt(3);
+                    if ( type==0 )
+                        fruits.get(i+a[j]).add(new WormFreezer());
+                    else if ( type==1 )
+                        fruits.get(i+a[j]).add(new WormHalfer());
+                    else
+                        fruits.get(i+a[j]).add(new WormKiller());
+                }
             }
+            int a = random.nextInt(30);
+            int type = random.nextInt(4);
+            if ( type==1 )
+                fruits.get(a).add(new MagicDoubler());
+            else if ( type==2 )
+                fruits.get(a).add(new MagicHeartBonus());
+            else if ( type==3 )
+                fruits.get(a).add(new MagicTimeExtender());
+            else
+                fruits.get(a).add(new MagicWormFreezer());
         }
-        if ( (time-1)%3 == 0 ) {
-            Apricot t1 = new Apricot();
-            Apricot t2 = new Apricot();
-            Apricot t3 = new Apricot();
-            Apricot t4 = new Apricot();
-            for (GameScene p : scenes) {
-                p.addFruits(t1, t2, t3, t4);
+
+        for ( GameScene gs: scenes ) {
+            for ( Fruits fruit: fruits.get(time%30) ) {
+                if ( (fruit instanceof WormFreezer || fruit instanceof WormHalfer
+                || fruit instanceof WormKiller) && gs.wormFreezeTime>0 ) continue;
+                gs.addFruits(fruit);
             }
-        }
-        if ((time - 2) % 3 == 0) {
-            Watermelon t1 = new Watermelon();
-            Watermelon t2 = new Watermelon();
-            MagicHeartBonus t3 = new MagicHeartBonus();
-            for (GameScene p : scenes)
-                p.addFruits(t1, t2, t3);
         }
 
         //check if freeze worm or magicFruit had collision
@@ -98,6 +130,7 @@ class GameCore {
             if(gs.wormFreezeTime>0)
                 gs.wormFreezeTime--;
         }
+        time++;
     }));
 
     GameCore(boolean music, boolean soundEffect, boolean singlePlayer, Scene scene, Group root) {
