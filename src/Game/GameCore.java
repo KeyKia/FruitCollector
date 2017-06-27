@@ -57,6 +57,7 @@ class GameCore {
 
     private Timeline gameTimer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
 
+        // Plan the quantity of fruit drops, in the beginning of each 30 seconds.
         if ( time%30==0 ) {
             fruits.clear();
             for ( int i=0; i<40; i++ )
