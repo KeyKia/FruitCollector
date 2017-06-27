@@ -9,10 +9,13 @@ import javafx.scene.Group;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.util.Duration;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.HashMap;
@@ -34,6 +37,7 @@ public class GameScene {
     private Text timerLbl = new Text();
     private PlayerInfo player;
     private Basket basket;
+    private boolean soundEffectEnabled=false;
 
     private Text score = new Text();
 
@@ -46,6 +50,8 @@ public class GameScene {
     private int halfTime = 0;
     private int doubleTime = 0;
     int wormFreezeTime = 0;
+
+    private MediaPlayer soundEffect = null;
 
 
     private Timeline timer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
@@ -65,13 +71,13 @@ public class GameScene {
     }));
 
 
-    GameScene(double width, double height, Group root, double start, int time, PlayerInfo player) {
+    GameScene(double width, double height, Group root, double start, int time, PlayerInfo player, boolean soundEffect) {
         this.width = width;
         this.height = height;
         this.root = root;
         this.start = start;
         this.player = player;
-
+        this.soundEffectEnabled = soundEffect;
 
         UNIT = width / 300;
         this.time = time;
@@ -208,14 +214,20 @@ public class GameScene {
 
     private void fruitCollected(Fruits fruit) {
         //check if worm is collected
-        if(fruit instanceof WormFreezer)
+        if(fruit instanceof WormFreezer){
             this.freezeTime=3;
-        if(fruit instanceof WormKiller)
-            this.loseHeart();
+            this.playSoundEffect("freeze");
+        }
+        if(fruit instanceof WormKiller) this.loseHeart();
         if(fruit instanceof WormHalfer) {
             this.halfTime = 10;
             basket.halfTheBasket();
+            this.playSoundEffect("halfed");
         }
+
+        //sound effect
+        if(fruit instanceof Watermelon) this.playSoundEffect("bigFruit");
+        if(fruit instanceof Orange || fruit instanceof Apricot) this.playSoundEffect("smallFruit");
 
         //check if any magical fruit is collected
         if ( fruit instanceof MagicDoubler ) {
@@ -271,6 +283,7 @@ public class GameScene {
                 root.getChildren().remove(canvas);
                 heartsCanvas.remove(canvas);
             });
+            this.playSoundEffect("loseHeart");
         } else {
             //TODO: Game Over
         }
@@ -295,6 +308,15 @@ public class GameScene {
         this.halfTime--;
         if(this.halfTime < 1) {
             basket.renormalTheBasket();
+        }
+    }
+
+    public void playSoundEffect(String name){
+        String musicFile = "Resources/sounds/" + name + ".mp3";
+        if(soundEffectEnabled) {
+            Media sound = new Media(new File(musicFile).toURI().toString());
+            soundEffect = new MediaPlayer(sound);
+            soundEffect.play();
         }
     }
 }

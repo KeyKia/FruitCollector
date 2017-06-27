@@ -10,6 +10,9 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.control.*;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
@@ -18,6 +21,7 @@ import javafx.scene.paint.Color;
 import javafx.util.Duration;
 import javafx.util.Pair;
 
+import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -62,9 +66,9 @@ class GameCore {
             Orange t3 = new Orange();
             for (GameScene p : scenes) {
                 p.addFruits(t1, t2, t3);
-                //p.addFruits(new WormFreezer());
-                //p.addFruits(new WormKiller());
-                p.addFruits(new WormHalfer());
+//                p.addFruits(new WormFreezer());
+//                p.addFruits(new WormKiller());
+//                p.addFruits(new WormHalfer());
             }
         }
         if ( (time-1)%3 == 0 ) {
@@ -166,8 +170,8 @@ class GameCore {
                     GameCore.this.player2 = new PlayerInfo(names.getValue());
 
                     if (music) {
-                        //loading sound effect file/files
-                        String musicFile = "Resources/sounds/" + "BirdInRain" + ".mp3";
+                        //loading music file/files
+                        String musicFile = "Resources/sounds/" + "arcadeFunk" + ".mp3";
 
                         Media sound = new Media(new File(musicFile).toURI().toString());
                         backgroundEffectPlayer = new MediaPlayer(sound);
@@ -181,10 +185,10 @@ class GameCore {
 
 
                     if (singlePlayer) {
-                        scenes.add(new GameScene(scene.getWidth(), scene.getHeight(), root, 0.0, TIME, GameCore.this.player1));
+                        scenes.add(new GameScene(scene.getWidth(), scene.getHeight(), root, 0.0, TIME, GameCore.this.player1, soundEffect));
                     } else {
-                        scenes.add(new GameScene(scene.getWidth() / 2 - 5, scene.getHeight(), root, scene.getWidth() / 2 + 5, TIME, GameCore.this.player1));
-                        scenes.add(new GameScene(scene.getWidth() / 2 - 5, scene.getHeight(), root, 0.0, TIME, GameCore.this.player2));
+                        scenes.add(new GameScene(scene.getWidth() / 2 - 5, scene.getHeight(), root, scene.getWidth() / 2 + 5, TIME, GameCore.this.player1, soundEffect));
+                        scenes.add(new GameScene(scene.getWidth() / 2 - 5, scene.getHeight(), root, 0.0, TIME, GameCore.this.player2, soundEffect));
                         Canvas line = new Canvas(5, scene.getHeight());
                         line.getGraphicsContext2D().setFill(Color.LIGHTGRAY);
                         line.getGraphicsContext2D().fillRect(0, 0, 5, line.getHeight());
