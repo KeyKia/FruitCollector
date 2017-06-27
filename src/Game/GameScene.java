@@ -26,6 +26,7 @@ public class GameScene {
     public static final double SPEED_CONVERTER = 60;
     static final int RENDER_SPEED = 1000 / 60;
     public static double UNIT;
+    int wormFreezeTime = 0;
     private double width, height;
     private Group root;
     private Canvas basketCanvas;
@@ -34,20 +35,13 @@ public class GameScene {
     private Text timerLbl = new Text();
     private PlayerInfo player;
     private Basket basket;
-
     private Text score = new Text();
-
     private ArrayList<Canvas> heartsCanvas = new ArrayList<>();
-
     private Map<Fruits, Canvas> fruitsCanvasMap = new HashMap<>();
-
     //worm collisions
     private int freezeTime = 0;
     private int halfTime = 0;
     private int doubleTime = 0;
-    int wormFreezeTime = 0;
-
-
     private Timeline timer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
         time--;
         timerLbl.setText(convertTimeToString());
@@ -134,6 +128,8 @@ public class GameScene {
             nextX = basketCanvas.getLayoutX() + (50 * UNIT) / SPEED_CONVERTER;
         if (nextX > start && nextX + basketCanvas.getWidth() < start + width)
             basketCanvas.setLayoutX(nextX);
+        else if (nextX + basketCanvas.getWidth() > start + width)
+            basketCanvas.setLayoutX(start + width - basketCanvas.getWidth() - 1);
     }
 
     private String convertTimeToString() {
@@ -185,6 +181,8 @@ public class GameScene {
             if (canvas.getBoundsInParent().intersects(basketCanvas.getBoundsInParent())) {
                 if (canvas.getLayoutX() + canvas.getWidth() / 2 > basketCanvas.getLayoutX() + basketCanvas.getWidth() / 10 && canvas.getLayoutX() + canvas.getWidth() < basketCanvas.getLayoutX() + 9.00 / 10 * basketCanvas.getWidth()) {
                     if (canvas.getLayoutY() + canvas.getHeight() >= basketCanvas.getLayoutY() + basketCanvas.getHeight() / 2) {
+                        fruitCollected(fruit);
+                        fruitsCanvasMap.remove(fruit);
                         Timeline removeAnimation = new Timeline(new KeyFrame(Duration.millis(RENDER_SPEED), event -> {
                             if (canvas.getScaleX() > 0) {
                                 canvas.setScaleX(canvas.getScaleX() - 0.1);
@@ -195,8 +193,6 @@ public class GameScene {
                         removeAnimation.play();
                         removeAnimation.setOnFinished(event -> {
                             root.getChildren().remove(canvas);
-                            fruitCollected(fruit);
-                            fruitsCanvasMap.remove(fruit);
                         });
 
                         //TODO:play soundEffect if possible related to fruit type
@@ -213,15 +209,12 @@ public class GameScene {
         if(fruit instanceof WormKiller)
             this.loseHeart();
         if(fruit instanceof WormHalfer) {
-            this.halfTime = 10;
-            basket.halfTheBasket();
+            makeBasketSizeHalf(10);
         }
 
         //check if any magical fruit is collected
         if ( fruit instanceof MagicDoubler ) {
-            this.doubleTime = 10;
-            this.halfTime = 0;
-            basket.doubleTheBasket();
+            makeBasketSizeDouble(10);
         }
         if ( fruit instanceof MagicWormFreezer )
             wormFreezeTime = 10;
@@ -296,5 +289,19 @@ public class GameScene {
         if(this.halfTime < 1) {
             basket.renormalTheBasket();
         }
+    }
+
+    void makeBasketSizeHalf(int duration) {
+        basket.halfTheBasket();
+        Timeline reNormalize = new Timeline(new KeyFrame(Duration.seconds(duration), event -> basket.doubleTheBasket()));
+        reNormalize.play();
+
+    }
+
+    void makeBasketSizeDouble(int duration) {
+        basket.doubleTheBasket();
+        Timeline reNormalize = new Timeline(new KeyFrame(Duration.seconds(duration), event -> basket.halfTheBasket()));
+        reNormalize.play();
+
     }
 }

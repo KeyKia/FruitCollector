@@ -106,101 +106,98 @@ class GameCore {
 
         //FOR DEBUGGING ONLY
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                //////////////////////////////////
-                //add username dialog
-                    // Create the custom dialog.
-                    Dialog<Pair<String, String>> dialog = new Dialog<>();
-                    dialog.setTitle("whats your name(s)?");
+        Platform.runLater(() -> {
+            //////////////////////////////////
+            //add username dialog
+            // Create the custom dialog.
+            Dialog<Pair<String, String>> dialog = new Dialog<>();
+            dialog.setTitle("whats your name(s)?");
 
-                    // Set the button types.
-                    ButtonType loginButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
-                    dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
+            // Set the button types.
+            ButtonType loginButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().addAll(loginButtonType, ButtonType.CANCEL);
 
-                    //initiate grid panel for names
-                    GridPane gridPane = new GridPane();
-                    gridPane.setHgap(10);
-                    gridPane.setVgap(10);
-                    gridPane.setPadding(new Insets(20, 150, 10, 10));
+            //initiate grid panel for names
+            GridPane gridPane = new GridPane();
+            gridPane.setHgap(10);
+            gridPane.setVgap(10);
+            gridPane.setPadding(new Insets(20, 150, 10, 10));
 
-                    //add username one -> always available
-                    TextField player1 = new TextField();
-                    player1.setPromptText("Player One");
-                    if(singlePlayer){
-                        gridPane.add(new Label("Player's Name:"), 0, 0);
-                    }else{
-                        gridPane.add(new Label("Player One's Name:"), 0, 0);
-                    }
-                    gridPane.add(player1, 1, 0);
+            //add username one -> always available
+            TextField player1 = new TextField();
+            player1.setPromptText("Player One");
+            if (singlePlayer) {
+                gridPane.add(new Label("Player's Name:"), 0, 0);
+            } else {
+                gridPane.add(new Label("Player One's Name:"), 0, 0);
+            }
+            gridPane.add(player1, 1, 0);
 
-                    //add username two -> available if multi player
-                    TextField player2 = new TextField();
-                    player2.setPromptText("Player Two");
-                    if(!singlePlayer) {
-                        gridPane.add(new Label("Player Two's Name:"), 0, 1);
-                        gridPane.add(player2, 1, 1);
-                    }
+            //add username two -> available if multi player
+            TextField player2 = new TextField();
+            player2.setPromptText("Player Two");
+            if (!singlePlayer) {
+                gridPane.add(new Label("Player Two's Name:"), 0, 1);
+                gridPane.add(player2, 1, 1);
+            }
 
-                    dialog.getDialogPane().setContent(gridPane);
+            dialog.getDialogPane().setContent(gridPane);
 
-                    // Request focus on the username field by default.
-                    Platform.runLater(() -> player1.requestFocus());
+            // Request focus on the username field by default.
+            Platform.runLater(player1::requestFocus);
 
-                    // Convert the result to a username-password-pair when the login button is clicked.
-                    dialog.setResultConverter(dialogButton -> {
-                        if (dialogButton == loginButtonType) {
-                            return new Pair<>(player1.getText(), player2.getText());
-                        }
-                        return null;
-                    });
+            // Convert the result to a username-password-pair when the login button is clicked.
+            dialog.setResultConverter(dialogButton -> {
+                if (dialogButton == loginButtonType) {
+                    return new Pair<>(player1.getText(), player2.getText());
+                }
+                return null;
+            });
 
-                    Optional<Pair<String, String>> result = dialog.showAndWait();
+            Optional<Pair<String, String>> result = dialog.showAndWait();
             //dialog add section finished here
             //////////////////////////////////
 
 
-                result.ifPresent(names -> {
-                    GameCore.this.player1 = new PlayerInfo(names.getKey());
-                    GameCore.this.player2 = new PlayerInfo(names.getValue());
+            result.ifPresent(names -> {
+                GameCore.this.player1 = new PlayerInfo(names.getKey());
+                GameCore.this.player2 = new PlayerInfo(names.getValue());
 
-                    if (music) {
-                        //loading sound effect file/files
-                        String musicFile = "Resources/sounds/" + "BirdInRain" + ".mp3";
+                if (music) {
+                    //loading sound effect file/files
+                    String musicFile = "Resources/sounds/" + "BirdInRain" + ".mp3";
 
-                        Media sound = new Media(new File(musicFile).toURI().toString());
-                        backgroundEffectPlayer = new MediaPlayer(sound);
-                        backgroundEffectPlayer.setOnEndOfMedia(() -> backgroundEffectPlayer.seek(Duration.ZERO));
-                        backgroundEffectPlayer.play();
+                    Media sound = new Media(new File(musicFile).toURI().toString());
+                    backgroundEffectPlayer = new MediaPlayer(sound);
+                    backgroundEffectPlayer.setOnEndOfMedia(() -> backgroundEffectPlayer.seek(Duration.ZERO));
+                    backgroundEffectPlayer.play();
 
-                    }
+                }
 
-                    scene.setOnKeyPressed(GameCore::keyBoardHandler);
-                    scene.setOnKeyReleased(GameCore::keyBoardHandler);
+                scene.setOnKeyPressed(GameCore::keyBoardHandler);
+                scene.setOnKeyReleased(GameCore::keyBoardHandler);
 
 
-                    if (singlePlayer) {
-                        scenes.add(new GameScene(scene.getWidth(), scene.getHeight(), root, 0.0, TIME, GameCore.this.player1));
-                    } else {
-                        scenes.add(new GameScene(scene.getWidth() / 2 - 5, scene.getHeight(), root, scene.getWidth() / 2 + 5, TIME, GameCore.this.player1));
-                        scenes.add(new GameScene(scene.getWidth() / 2 - 5, scene.getHeight(), root, 0.0, TIME, GameCore.this.player2));
-                        Canvas line = new Canvas(5, scene.getHeight());
-                        line.getGraphicsContext2D().setFill(Color.LIGHTGRAY);
-                        line.getGraphicsContext2D().fillRect(0, 0, 5, line.getHeight());
-                        line.setLayoutX(scene.getWidth() / 2);
-                        root.getChildren().add(line);
-                    }
+                if (singlePlayer) {
+                    scenes.add(new GameScene(scene.getWidth(), scene.getHeight(), root, 0.0, TIME, GameCore.this.player1));
+                } else {
+                    scenes.add(new GameScene(scene.getWidth() / 2 - 5, scene.getHeight(), root, scene.getWidth() / 2 + 5, TIME, GameCore.this.player1));
+                    scenes.add(new GameScene(scene.getWidth() / 2 - 5, scene.getHeight(), root, 0.0, TIME, GameCore.this.player2));
+                    Canvas line = new Canvas(5, scene.getHeight());
+                    line.getGraphicsContext2D().setFill(Color.LIGHTGRAY);
+                    line.getGraphicsContext2D().fillRect(0, 0, 5, line.getHeight());
+                    line.setLayoutX(scene.getWidth() / 2);
+                    root.getChildren().add(line);
+                }
 
-                    movementHandler.setCycleCount(Timeline.INDEFINITE);
-                    movementHandler.play();
+                movementHandler.setCycleCount(Timeline.INDEFINITE);
+                movementHandler.play();
 
-                    gameTimer.setCycleCount(Animation.INDEFINITE);
-                    gameTimer.play();
+                gameTimer.setCycleCount(Animation.INDEFINITE);
+                gameTimer.play();
 
-                });
+            });
 
-            }
         });
 
     }
