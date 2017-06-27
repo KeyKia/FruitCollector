@@ -89,7 +89,6 @@ class GameInit {
                 this.backgroundEffectPlayer.stop();
             }
             setMusicSts(music.isSelected());
-            System.out.println(musicSts);
         });
 
         soundEffect.setSelected(true);
@@ -97,7 +96,6 @@ class GameInit {
         soundEffect.setLayoutX(singlePlayerBtn.getLayoutX() + 10);
         soundEffect.setOnMouseClicked(event -> {
             setSoundEffectSts(soundEffect.isSelected());
-            System.out.println(soundEffectSts);
         });
 
 
