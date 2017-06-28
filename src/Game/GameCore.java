@@ -18,6 +18,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 import javafx.util.Pair;
 
@@ -42,6 +43,7 @@ class GameCore {
     private int wormPer3Secs = 2;
     private Scene mainScene;
     private Group root;
+    private boolean musicEnable;
 
 
     //sound vars
@@ -66,77 +68,77 @@ class GameCore {
     private Timeline gameTimer = new Timeline(new KeyFrame(Duration.seconds(1), event -> {
 
         // Plan the quantity of fruit drops, in the beginning of each 30 seconds.
-        if ( time%30==0 ) {
+        if (time % 30 == 0) {
             fruits.clear();
-            for ( int i=0; i<40; i++ )
+            for (int i = 0; i < 40; i++)
                 fruits.add(new ArrayList<>());
             Random random = new Random();
-            for ( int i=0; i<30; i+=3 ) {
+            for (int i = 0; i < 30; i += 3) {
                 int a[] = new int[10];
                 a[0] = random.nextInt(3);
                 a[1] = random.nextInt(3);
                 a[2] = random.nextInt(3);
-                fruits.get(i+a[0]).add(new Orange());
-                fruits.get(i+a[1]).add(new Orange());
-                fruits.get(i+a[2]).add(new Orange());
+                fruits.get(i + a[0]).add(new Orange());
+                fruits.get(i + a[1]).add(new Orange());
+                fruits.get(i + a[2]).add(new Orange());
 
                 a[0] = random.nextInt(3);
                 a[1] = random.nextInt(3);
                 a[2] = random.nextInt(3);
                 a[3] = random.nextInt(3);
-                fruits.get(i+a[0]).add(new Apricot());
-                fruits.get(i+a[1]).add(new Apricot());
-                fruits.get(i+a[2]).add(new Apricot());
-                fruits.get(i+a[3]).add(new Apricot());
+                fruits.get(i + a[0]).add(new Apricot());
+                fruits.get(i + a[1]).add(new Apricot());
+                fruits.get(i + a[2]).add(new Apricot());
+                fruits.get(i + a[3]).add(new Apricot());
 
                 a[0] = random.nextInt(3);
                 a[1] = random.nextInt(3);
-                fruits.get(i+a[0]).add(new Watermelon());
-                fruits.get(i+a[1]).add(new Watermelon());
+                fruits.get(i + a[0]).add(new Watermelon());
+                fruits.get(i + a[1]).add(new Watermelon());
 
-                for ( int j=0; j<wormPer3Secs; j++ ) {
+                for (int j = 0; j < wormPer3Secs; j++) {
                     a[j] = random.nextInt(3);
                     int type = random.nextInt(3);
-                    if ( type==0 )
-                        fruits.get(i+a[j]).add(new WormFreezer());
-                    else if ( type==1 )
-                        fruits.get(i+a[j]).add(new WormHalfer());
+                    if (type == 0)
+                        fruits.get(i + a[j]).add(new WormFreezer());
+                    else if (type == 1)
+                        fruits.get(i + a[j]).add(new WormHalfer());
                     else
-                        fruits.get(i+a[j]).add(new WormKiller());
+                        fruits.get(i + a[j]).add(new WormKiller());
                 }
             }
             int a = random.nextInt(30);
             int type = random.nextInt(4);
-            if ( type==1 )
+            if (type == 1)
                 fruits.get(a).add(new MagicDoubler());
-            else if ( type==2 )
+            else if (type == 2)
                 fruits.get(a).add(new MagicHeartBonus());
-            else if ( type==3 )
+            else if (type == 3)
                 fruits.get(a).add(new MagicTimeExtender());
             else
                 fruits.get(a).add(new MagicWormFreezer());
         }
 
-        for ( GameScene gs: scenes ) {
-            for ( Fruits fruit: fruits.get(time%30) ) {
-                if ( (fruit instanceof WormFreezer || fruit instanceof WormHalfer
-                || fruit instanceof WormKiller) && gs.wormFreezeTime>0 ) continue;
+        for (GameScene gs : scenes) {
+            for (Fruits fruit : fruits.get(time % 30)) {
+                if ((fruit instanceof WormFreezer || fruit instanceof WormHalfer
+                        || fruit instanceof WormKiller) && gs.wormFreezeTime > 0) continue;
                 gs.addFruits(fruit);
             }
         }
 
         //check if freeze worm or magicFruit had collision
-        for(GameScene gs: scenes){
-            if(gs.getFreezeTime() > 0){
+        for (GameScene gs : scenes) {
+            if (gs.getFreezeTime() > 0) {
                 gs.minusFreezeTime();
             }
-            if(gs.getHalfTime() > 0){
+            if (gs.getHalfTime() > 0) {
                 //System.out.println(gs.getHalfTime());
                 gs.minusHalfTime();
             }
-            if(gs.getDoubleTime() > 0)
+            if (gs.getDoubleTime() > 0)
                 gs.minusDoubleTime();
-            if(gs.wormFreezeTime>0)
+            if (gs.wormFreezeTime > 0)
                 gs.wormFreezeTime--;
         }
         time++;
@@ -151,7 +153,7 @@ class GameCore {
         this.singlePlayer = singlePlayer;
         this.mainScene = scene;
         this.root = root;
-
+        this.musicEnable = music;
 
         Platform.runLater(() -> {
             //////////////////////////////////
@@ -197,7 +199,7 @@ class GameCore {
             dialog.setResultConverter(dialogButton -> {
                 if (dialogButton == loginButtonType) {
                     return new Pair<>(player1.getText(), player2.getText());
-                }else{
+                } else {
                     //the dialog was cancelled
                     Main.resetGame();
                 }
@@ -289,14 +291,25 @@ class GameCore {
         root.getChildren().add(back);
         // show HighScores
         root.getChildren().addAll(scoreBoard.getHighScoreScene(mainScene.getWidth() / 4, mainScene.getHeight() / 10, mainScene.getWidth() / 2, mainScene.getHeight() / 2));
-//        Button btnExit = new Button("Exit");
         Button btnAgain = new Button("Playe Again");
+        btnAgain.setLayoutY(mainScene.getHeight() - (mainScene.getWidth() / 8));
+//        btnAgain.setLayoutY(mainScene.getHeight() - 5 * mainScene.getHeight() / 100);
+//        btnAgain.setLayoutX(mainScene.getWidth() / 2 + 5 * mainScene.getWidth() / 100);
+        btnAgain.setLayoutX(mainScene.getWidth() / 4 );
+
+        btnAgain.setMinWidth(mainScene.getWidth() / 2);
+        btnAgain.setMaxWidth(mainScene.getWidth() / 2);
+        btnAgain.setMinHeight(mainScene.getWidth() / 20);
+        Font btnFont = btnAgain.getFont();
+        btnAgain.setFont(new Font(btnFont.getName(), mainScene.getWidth()/24));
+
+//        btnAgain.setMaxHeight(mainScene.getWidth() / 10);
+
+//        Button btnExit = new Button("Exit");
 //        root.getChildren().addAll(btnExit, btnAgain);
-        root.getChildren().addAll(btnAgain);
 //        btnExit.setLayoutY(mainScene.getHeight()-5*mainScene.getHeight()/100);
-        btnAgain.setLayoutY(mainScene.getHeight()-5*mainScene.getHeight()/100);
 //        btnExit.setLayoutX(mainScene.getWidth()/2-5*mainScene.getWidth()/100);
-        btnAgain.setLayoutX(mainScene.getWidth()/2+5*mainScene.getWidth()/100);
+        root.getChildren().addAll(btnAgain);
 /*
 
         btnExit.setOnAction( new EventHandler<ActionEvent>() {
@@ -311,7 +324,7 @@ class GameCore {
             @Override
             public void handle(ActionEvent event) {
                 System.out.println("reset");
-                backgroundEffectPlayer.stop();
+                if(musicEnable) backgroundEffectPlayer.stop();
                 Main.resetGame();
             }
         });
