@@ -95,9 +95,7 @@ class GameInit {
         soundEffect.setSelected(true);
         soundEffect.setLayoutY(singlePlayerBtn.getLayoutY() + 50);
         soundEffect.setLayoutX(singlePlayerBtn.getLayoutX() + 10);
-        soundEffect.setOnMouseClicked(event -> {
-            setSoundEffectSts(soundEffect.isSelected());
-        });
+        soundEffect.setOnMouseClicked(event -> setSoundEffectSts(soundEffect.isSelected()));
 
         showHighScores = new Button("High Scores");
 
@@ -161,7 +159,7 @@ class GameInit {
         moveTitle.setOnFinished(event -> new GameCore(musicSts, soundEffectSts, singlePlayer, scene, root));
     }
 
-    void showScores() {
+    private void showScores() {
         root.getChildren().removeAll(singlePlayerBtn, multiPlayerBtn, soundEffect, music, title, showHighScores);
         root.getChildren().addAll(GameCore.getScoreBoard().getHighScoreScene(scene.getWidth() / 4, scene.getHeight() / 4, scene.getWidth() / 2, scene.getHeight() / 2));
         Button back = new Button("Back to menu");

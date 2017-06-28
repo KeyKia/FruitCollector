@@ -11,40 +11,42 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class PlayerInfo implements Comparable<PlayerInfo>, Serializable {
     static final long serialVersionUID = 1234567890;
-    transient Image avatar = null;
+    private transient Image avatar = null;
     private String nickName;
     private int score = 0;
     private int hearts = 3;
 
-    public PlayerInfo(String nickName) {
+    PlayerInfo(String nickName) {
         this.nickName = nickName;
         setRandomAvatar();
 
     }
 
-    public String getNickName() {
+    String getNickName() {
         return nickName;
     }
 
-    public Image getAvatar() {
+    Image getAvatar() {
         return avatar;
     }
 
-    public int getScore() {
+    int getScore() {
         return score;
     }
 
-    public void addScore(int score) {
+    void addScore(int score) {
         this.score += score;
     }
 
-    public int getHearts() {
+    int getHearts() {
         return hearts;
     }
 
-    public void addHearts() { this.hearts++; }
+    void addHearts() {
+        this.hearts++;
+    }
 
-    public void loseHart() {
+    void loseHart() {
         this.hearts--;
     }
 

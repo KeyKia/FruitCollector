@@ -36,7 +36,6 @@ class GameCore {
     private static boolean a = false, d = false, left = false, right = false;
     private static ArrayList<GameScene> scenes = new ArrayList<>();
     private static HighScores scoreBoard = new HighScores();
-    private boolean singlePlayer;
     private ArrayList<ArrayList<Fruits>> fruits = new ArrayList<>();
     private int time = 0;
     private int wormPer3Secs = 2;
@@ -149,7 +148,6 @@ class GameCore {
 
     GameCore(boolean music, boolean soundEffect, boolean singlePlayer, Scene scene, Group root) {
 
-        this.singlePlayer = singlePlayer;
         this.mainScene = scene;
         this.root = root;
         this.musicEnable = music;
@@ -281,11 +279,11 @@ class GameCore {
         scoreBoard.addScore(scene.getPlayer());
     }
 
-    public static HighScores getScoreBoard() {
+    static HighScores getScoreBoard() {
         return scoreBoard;
     }
 
-    void gameOver() {
+    private void gameOver() {
         gameTimer.stop();
         movementHandler.stop();
         Image backImage = new Image("file:Resources/images/JungleBack.png");

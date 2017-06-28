@@ -47,7 +47,6 @@ public class GameScene {
     private int doubleTime = 0;
 
     private boolean soundEffectEnabled = false;
-    private MediaPlayer gameSoundEffect = null;
     private Timeline objectsHandler = new Timeline(new KeyFrame(Duration.millis(RENDER_SPEED), event -> {
         try {
             moveFruits();
@@ -347,7 +346,7 @@ public class GameScene {
         if(this.soundEffectEnabled) {
             String musicFile = "Resources/sounds/" + name + ".mp3";
             Media sound = new Media(new File(musicFile).toURI().toString());
-            gameSoundEffect = new MediaPlayer(sound);
+            MediaPlayer gameSoundEffect = new MediaPlayer(sound);
             gameSoundEffect.play();
         }
 
