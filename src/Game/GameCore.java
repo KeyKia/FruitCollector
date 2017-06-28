@@ -6,7 +6,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -282,6 +281,10 @@ class GameCore {
         scoreBoard.addScore(scene.getPlayer());
     }
 
+    public static HighScores getScoreBoard() {
+        return scoreBoard;
+    }
+
     void gameOver() {
         gameTimer.stop();
         movementHandler.stop();
@@ -320,14 +323,10 @@ class GameCore {
         });
 */
 
-        btnAgain.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                System.out.println("reset");
-                if(musicEnable) backgroundEffectPlayer.stop();
-                Main.resetGame();
-            }
+        btnAgain.setOnAction(event -> {
+            System.out.println("reset");
+            if (musicEnable) backgroundEffectPlayer.stop();
+            Main.resetGame();
         });
     }
-
 }

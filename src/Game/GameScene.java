@@ -249,7 +249,7 @@ public class GameScene {
             player.addHearts();
             Canvas canvas = heart(player.getHearts());
             root.getChildren().add(canvas);
-            heartsCanvas.add(canvas);
+            heartsCanvas.add(0, canvas);
         }
 
         player.addScore(fruit.getScore());

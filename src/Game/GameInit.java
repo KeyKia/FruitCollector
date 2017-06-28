@@ -36,6 +36,7 @@ class GameInit {
     private CheckBox music = new CheckBox("Music");
     private CheckBox soundEffect = new CheckBox("Sound Effect");
     private Text title = new Text(background.getWidth() / 2 - 30, background.getHeight() / 2 - 100, "Fruit Collector");
+    private Button showHighScores;
     //sound vars
     private MediaPlayer backgroundEffectPlayer  = null;
 
@@ -98,12 +99,14 @@ class GameInit {
             setSoundEffectSts(soundEffect.isSelected());
         });
 
+        showHighScores = new Button("High Scores");
 
-
-
+        showHighScores.setLayoutX((soundEffect.getLayoutX() + multiPlayerBtn.getLayoutX()) / 2 - 20);
+        showHighScores.setLayoutY(soundEffect.getLayoutY() + 40);
+        showHighScores.setOnMouseClicked(event -> showScores());
 
         root.getChildren().add(background);
-        root.getChildren().addAll(singlePlayerBtn, multiPlayerBtn, soundEffect, music, title);
+        root.getChildren().addAll(singlePlayerBtn, multiPlayerBtn, soundEffect, music, title, showHighScores);
 
     }
 
@@ -117,7 +120,6 @@ class GameInit {
 
     private void setMusicSts(boolean musicSts) {
         this.musicSts = musicSts;
-        //ToDo:Stop and play Music
         if(musicSts){
             this.backgroundEffectPlayer.play();
         }else{
@@ -136,7 +138,7 @@ class GameInit {
     }
 
     private void startGameAnimation(boolean singlePlayer) {
-        root.getChildren().removeAll(singlePlayerBtn, multiPlayerBtn, soundEffect, music);
+        root.getChildren().removeAll(singlePlayerBtn, multiPlayerBtn, soundEffect, music, showHighScores);
         Timeline moveTitle = new Timeline(new KeyFrame(Duration.millis(15), event -> {
             if (title.getScaleX() > 1.5) {
                 title.setScaleX(title.getScaleX() - 0.1);
@@ -157,5 +159,17 @@ class GameInit {
         moveTitle.setCycleCount(100);
         moveTitle.play();
         moveTitle.setOnFinished(event -> new GameCore(musicSts, soundEffectSts, singlePlayer, scene, root));
+    }
+
+    void showScores() {
+        root.getChildren().removeAll(singlePlayerBtn, multiPlayerBtn, soundEffect, music, title, showHighScores);
+        root.getChildren().addAll(GameCore.getScoreBoard().getHighScoreScene(scene.getWidth() / 4, scene.getHeight() / 4, scene.getWidth() / 2, scene.getHeight() / 2));
+        Button back = new Button("Back to menu");
+        back.setLayoutX(scene.getWidth() / 2 - 40);
+        back.setLayoutY(3.00 / 4 * scene.getHeight() + 10);
+        back.setScaleX(1.5);
+        back.setScaleY(1.5);
+        back.setOnMouseClicked(event -> Main.resetGame());
+        root.getChildren().add(back);
     }
 }

@@ -18,7 +18,7 @@ public class Main extends Application {
         Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
 
         //set Stage boundaries to the lower right corner of the visible bounds of the main screen
-        primaryStage.setWidth(510.00);
+        primaryStage.setWidth(500.00);
         primaryStage.setX(primaryScreenBounds.getMinX() + 100);
         primaryStage.setY(primaryScreenBounds.getMinY());
         primaryStage.setTitle("Fruit Collector");
