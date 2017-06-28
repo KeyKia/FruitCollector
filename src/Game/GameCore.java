@@ -48,12 +48,12 @@ class GameCore {
     private MediaPlayer backgroundEffectPlayer = null;
 
     private Timeline movementHandler = new Timeline(new KeyFrame(Duration.millis(GameScene.RENDER_SPEED), event -> {
-        if (scenes.size() > 0)
+        if (scenes.get(0) != null)
             if (left)
                 scenes.get(0).moveBasket(true);
             else if (right)
                 scenes.get(0).moveBasket(false);
-        if (scenes.size() > 1) {
+        if (scenes.get(1) != null) {
             if (a)
                 scenes.get(1).moveBasket(true);
             else if (d)
@@ -118,31 +118,38 @@ class GameCore {
         }
 
         for (GameScene gs : scenes) {
-            for (Fruits fruit : fruits.get(time % 30)) {
-                if ((fruit instanceof WormFreezer || fruit instanceof WormHalfer
-                        || fruit instanceof WormKiller) && gs.wormFreezeTime > 0) continue;
-                gs.addFruits(fruit);
+            if (gs != null) {
+                for (Fruits fruit : fruits.get(time % 30)) {
+                    if ((fruit instanceof WormFreezer || fruit instanceof WormHalfer
+                            || fruit instanceof WormKiller) && gs.wormFreezeTime > 0) continue;
+                    gs.addFruits(fruit);
+                }
             }
         }
 
         //check if freeze worm or magicFruit had collision
         for (GameScene gs : scenes) {
-            if (gs.getFreezeTime() > 0) {
-                gs.minusFreezeTime();
+            if (gs != null) {
+
+
+                if (gs.getFreezeTime() > 0) {
+                    gs.minusFreezeTime();
+                }
+                if (gs.getHalfTime() > 0) {
+                    //System.out.println(gs.getHalfTime());
+                    gs.minusHalfTime();
+                }
+                if (gs.getDoubleTime() > 0)
+                    gs.minusDoubleTime();
+                if (gs.wormFreezeTime > 0)
+                    gs.wormFreezeTime--;
             }
-            if (gs.getHalfTime() > 0) {
-                //System.out.println(gs.getHalfTime());
-                gs.minusHalfTime();
-            }
-            if (gs.getDoubleTime() > 0)
-                gs.minusDoubleTime();
-            if (gs.wormFreezeTime > 0)
-                gs.wormFreezeTime--;
         }
         time++;
 
-        if (scenes.size() == 0)
+        if (scenes.get(0) == null && scenes.get(1) == null)
             gameOver();
+
 
     }));
 
@@ -275,7 +282,9 @@ class GameCore {
     }
 
     static void sceneOver(GameScene scene) {
-        scenes.remove(scene);
+        int a = scenes.indexOf(scene);
+        scenes.remove(a);
+        scenes.add(a, null);
         scoreBoard.addScore(scene.getPlayer());
     }
 

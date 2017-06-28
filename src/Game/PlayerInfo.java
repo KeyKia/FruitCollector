@@ -57,7 +57,7 @@ public class PlayerInfo implements Comparable<PlayerInfo>, Serializable {
 
         PlayerInfo that = (PlayerInfo) o;
 
-        return nickName.equals(that.nickName);
+        return nickName.equalsIgnoreCase(that.nickName);
     }
 
     @Override
