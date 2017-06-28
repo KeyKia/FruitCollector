@@ -1,8 +1,12 @@
 package Game;
 
 import javafx.scene.Group;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
@@ -48,7 +52,11 @@ class HighScores implements Serializable {
         back.setLayoutY(y);
         highScoresGroup.getChildren().add(back);
 
-        for (int i = 0; i < highScores.size(); i++) {
+
+
+        int limit = (highScores.size()>5)? 5 : highScores.size();
+        for (int i = 0; i < limit; i++) {
+
             PlayerInfo player = highScores.get(i);
             ImageView avatar = new ImageView(player.getAvatar());
             if (avatar.getImage() == null) {
@@ -56,15 +64,22 @@ class HighScores implements Serializable {
                 avatar.setImage(player.getAvatar());
             }
             avatar.setX(x);
-            avatar.setY(y + (i * 60));
-            avatar.setFitWidth(width / 4);
-            avatar.setFitHeight(50);
+            avatar.setY(y + (i * (width/6)) + (i * 15));
+            avatar.setFitWidth(width / 6);
+            avatar.setFitHeight(width / 6);
 
-            Text name = new Text(avatar.getX() + avatar.getFitWidth() + 5, avatar.getY() + avatar.getFitHeight() / 2 + 4, player.getNickName());
+            Text name = new Text(avatar.getX() + avatar.getFitWidth() + 15, avatar.getY() + avatar.getFitHeight() / 2 + 10, player.getNickName());
             name.setTextAlignment(TextAlignment.CENTER);
             name.resize(width / 2, 50);
+            Font nameFont = name.getFont();
+            name.setFont(new Font(nameFont.getName(), width/12));
+
 
             Text score = new Text(name.getX() + width / 2 + 5, name.getY(), "" + player.getScore());
+            //score.setFont(button.getFont().deriveFont((float)(width/6)));
+            Font scoreFont = score.getFont();
+            score.setFont(new Font(scoreFont.getName(), width/12));
+
 
             highScoresGroup.getChildren().addAll(avatar, name, score);
 
